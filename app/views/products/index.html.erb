@@ -1,0 +1,53 @@
+<div class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-8 border-l-4 border-blue-600 pl-4">
+      Danh sách Khóa Thông Minh
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      <% @products.each do |product| %>
+        <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 group">
+          
+          <%# Phần hình ảnh - Lấy ảnh của variant đầu tiên %>
+          <div class="relative h-64 bg-gray-200 overflow-hidden">
+            <% if product.variants.any? && product.variants.first.images.attached? %>
+              <%= image_tag product.variants.first.images.first, 
+                  class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
+            <% else %>
+              <div class="flex items-center justify-center h-full text-gray-400 italic">No Image</div>
+            <% end %>
+            
+            <%# Badge danh mục %>
+            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-blue-600 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+              <%= product.category&.name %>
+            </span>
+          </div>
+
+          <%# Thông tin sản phẩm %>
+          <div class="p-5">
+            <p class="text-xs text-gray-400 uppercase tracking-widest mb-1"><%= product.brand %></p>
+            <h2 class="text-xl font-bold text-gray-800 mb-2 truncate">
+              <%= link_to product.name, product_path(product), class: "hover:text-blue-600" %>
+            </h2>
+            
+            <div class="flex items-center justify-between mt-4">
+              <div>
+                <span class="text-sm text-gray-500 block">Giá từ:</span>
+                <span class="text-xl font-black text-red-600">
+                  <%= number_to_currency(product.variants.minimum(:price)) %>
+                </span>
+              </div>
+              
+              <%= link_to product_path(product), 
+                  class: "bg-gray-900 text-white p-3 rounded-xl hover:bg-blue-600 transition-colors" do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

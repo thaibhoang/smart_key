@@ -1,0 +1,93 @@
+<div class="bg-white min-h-screen pb-20">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm text-gray-500">
+    <%= link_to "Trang chủ", root_path, class: "hover:text-blue-600" %> / 
+    <%= link_to @product.category.name, "#", class: "hover:text-blue-600" %> /
+    <span class="text-gray-900 font-medium"><%= @product.name %></span>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+      
+      <div class="flex flex-col">
+        <div class="w-full aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-100">
+          <% if @default_variant&.images&.attached? %>
+            <%= image_tag @default_variant.images.first, class: "w-full h-full object-center object-cover" %>
+          <% else %>
+            <div class="flex items-center justify-center h-full text-gray-400">No Image Available</div>
+          <% end %>
+        </div>
+        
+        <div class="mt-4 grid grid-cols-4 gap-4">
+          <% @variants.each do |variant| %>
+            <% if variant.images.attached? %>
+              <div class="h-24 rounded-lg border-2 border-transparent hover:border-blue-500 cursor-pointer overflow-hidden transition">
+                <%= image_tag variant.images.first, class: "w-full h-full object-cover" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
+        <div class="border-b border-gray-200 pb-6">
+          <p class="text-blue-600 font-semibold tracking-wide uppercase text-sm"><%= @product.brand %></p>
+          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mt-2"><%= @product.name %></h1>
+          
+          <div class="mt-4 flex items-center justify-between">
+            <h2 class="sr-only">Product information</h2>
+            <p class="text-3xl text-red-600 font-bold">
+              <%= number_to_currency(@default_variant&.price || 0) %>
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <h3 class="text-sm font-medium text-gray-900">Mô tả sản phẩm</h3>
+          <div class="mt-3 text-base text-gray-600 leading-relaxed">
+            <%= @product.description %>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <h3 class="text-sm font-medium text-gray-900">Phiên bản & Màu sắc</h3>
+          <div class="flex flex-wrap gap-3 mt-3">
+            <% @variants.each do |variant| %>
+              <button class="px-4 py-2 border rounded-md text-sm font-medium hover:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
+                <%= variant.color %> - <%= number_to_currency(variant.price) %>
+              </button>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="mt-10 flex gap-4">
+          <button class="flex-1 bg-blue-600 border border-transparent rounded-xl py-4 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-lg">
+            Thêm vào giỏ hàng
+          </button>
+          <button class="bg-gray-100 p-4 rounded-xl text-gray-400 hover:text-red-500 transition">
+            <svg class="h-6 w-6 shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-20 border-t border-gray-100 pt-10">
+      <h3 class="text-2xl font-bold text-gray-900 mb-8">Thông số kỹ thuật</h3>
+      <div class="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
+        <dl class="divide-y divide-gray-200">
+          <% if @product.metadata.present? %>
+            <% @product.metadata.each do |key, value| %>
+              <div class="grid grid-cols-3 py-4 px-6 hover:bg-white transition">
+                <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wider"><%= key.to_s.humanize %></dt>
+                <dd class="text-sm text-gray-900 col-span-2 font-medium">
+                  <%= value.is_a?(Array) ? value.join(", ") : value %>
+                </dd>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="p-6 text-gray-400 italic">Chưa có thông số kỹ thuật cụ thể.</div>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
