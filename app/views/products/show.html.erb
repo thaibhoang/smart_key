@@ -1,93 +1,117 @@
-<div class="bg-white min-h-screen pb-20">
-  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 text-sm text-gray-500">
-    <%= link_to "Trang chủ", root_path, class: "hover:text-blue-600" %> / 
-    <%= link_to @product.category.name, "#", class: "hover:text-blue-600" %> /
-    <span class="text-gray-900 font-medium"><%= @product.name %></span>
+<div class="bg-white min-h-screen" data-controller="product-gallery"> 
+  <nav class="hidden lg:block max-w-7xl mx-auto px-8 py-4 text-xs text-gray-400 uppercase tracking-widest">
+    <%= link_to "Home", root_path %> > <span class="text-gray-900"><%= @product.name %></span>
   </nav>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="lg:grid lg:grid-cols-2 lg:gap-x-12 lg:items-start">
+  <div class="max-w-7xl mx-auto lg:px-8 py-4 lg:py-10">
+    <div class="lg:grid lg:grid-cols-12 lg:gap-x-12">
       
-      <div class="flex flex-col">
-        <div class="w-full aspect-square rounded-2xl overflow-hidden bg-gray-100 border border-gray-100">
-          <% if @default_variant&.images&.attached? %>
-            <%= image_tag @default_variant.images.first, class: "w-full h-full object-center object-cover" %>
-          <% else %>
-            <div class="flex items-center justify-center h-full text-gray-400">No Image Available</div>
+      <div class="lg:col-span-7 flex flex-col lg:flex-row gap-4">
+        
+        <div class="hidden lg:flex flex-col gap-3 w-20 flex-shrink-0 max-h-[550px] overflow-y-auto scrollbar-hide" 
+             data-product-gallery-target="variantGallery">
+          <% @product.variants.first.images.each_with_index do |img, idx| %>
+            <div class="w-full aspect-square rounded border-2 <%= idx == 0 ? 'border-blue-600' : 'border-transparent' %> cursor-pointer overflow-hidden bg-gray-50 transition-all"
+                 data-product-gallery-target="thumbnail"
+                 data-action="click->product-gallery#selectImage"
+                 data-url="<%= url_for(img) %>">
+              <%= image_tag img, class: "w-full h-full object-contain p-1" %>
+            </div>
           <% end %>
         </div>
-        
-        <div class="mt-4 grid grid-cols-4 gap-4">
-          <% @variants.each do |variant| %>
-            <% if variant.images.attached? %>
-              <div class="h-24 rounded-lg border-2 border-transparent hover:border-blue-500 cursor-pointer overflow-hidden transition">
-                <%= image_tag variant.images.first, class: "w-full h-full object-cover" %>
-              </div>
-            <% end %>
+
+        <div class="relative flex-1 group bg-gray-50 overflow-hidden lg:rounded-xl aspect-square lg:aspect-[4/5]"
+          data-action="touchstart->product-gallery#touchStart touchend->product-gallery#touchEnd">
+          <img data-product-gallery-target="mainImage" 
+               src="<%= url_for(@product.variants.first.images.first) %>" 
+               class="w-full h-full object-contain p-4 lg:p-10 transition-opacity duration-300">
+          
+          <div class="absolute inset-0 flex items-center justify-between px-2 lg:px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button data-action="click->product-gallery#previous" class="p-2 lg:p-3 rounded-full bg-white/80 backdrop-blur shadow-md hover:bg-white transition text-gray-900">
+              <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2"/></svg>
+            </button>
+            <button data-action="click->product-gallery#next" class="p-2 lg:p-3 rounded-full bg-white/80 backdrop-blur shadow-md hover:bg-white transition text-gray-900">
+              <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:hidden px-4 mt-4 flex gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide" 
+             data-product-gallery-target="variantGallery">
+          <% @product.variants.first.images.each_with_index do |img, idx| %>
+            <div class="flex-shrink-0 w-20 h-20 lg:w-full aspect-square rounded-lg border-2 border-transparent cursor-pointer overflow-hidden bg-gray-50 transition-all duration-200 shadow-sm"
+                data-product-gallery-target="thumbnail"
+                data-action="click->product-gallery#selectImage"
+                data-url="<%= url_for(img) %>">
+              <%= image_tag img, class: "w-full h-full object-contain p-1" %>
+            </div>
           <% end %>
         </div>
       </div>
 
-      <div class="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
-        <div class="border-b border-gray-200 pb-6">
-          <p class="text-blue-600 font-semibold tracking-wide uppercase text-sm"><%= @product.brand %></p>
-          <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mt-2"><%= @product.name %></h1>
+      <div class="lg:col-span-5 px-4 lg:px-0 mt-8 lg:mt-0 lg:sticky lg:top-10">
+        <div class="border-b border-gray-100 pb-6">
+          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mb-2"><%= @product.brand %></p>
+          <h1 class="text-3xl font-serif text-gray-900 leading-tight"><%= @product.name %></h1>
           
-          <div class="mt-4 flex items-center justify-between">
-            <h2 class="sr-only">Product information</h2>
-            <p class="text-3xl text-red-600 font-bold">
-              <%= number_to_currency(@default_variant&.price || 0) %>
-            </p>
-          </div>
-        </div>
-
-        <div class="mt-6">
-          <h3 class="text-sm font-medium text-gray-900">Mô tả sản phẩm</h3>
-          <div class="mt-3 text-base text-gray-600 leading-relaxed">
-            <%= @product.description %>
+          <div class="mt-6">
+            <span data-product-gallery-target="price" class="text-2xl font-light text-gray-900">
+              <%= number_to_currency(@product.variants.first.price, unit: "₫", precision: 0, format: "%n %u") %>
+            </span>
           </div>
         </div>
 
         <div class="mt-8">
-          <h3 class="text-sm font-medium text-gray-900">Phiên bản & Màu sắc</h3>
-          <div class="flex flex-wrap gap-3 mt-3">
-            <% @variants.each do |variant| %>
-              <button class="px-4 py-2 border rounded-md text-sm font-medium hover:border-blue-500 focus:ring-2 focus:ring-blue-500 transition">
-                <%= variant.color %> - <%= number_to_currency(variant.price) %>
+          <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">Chọn phiên bản:</h3>
+          <div class="grid grid-cols-2 gap-2">
+            <% @product.variants.each do |v| %>
+              <button class="py-3 border border-gray-200 text-sm hover:border-blue-600 transition"
+                data-action="click->product-gallery#switchVariant"
+                data-price="<%= number_to_currency(v.price, unit: "₫", precision: 0, format: "%n %u") %>"
+                data-images="<%= v.images.map { |img| url_for(img) }.to_json %>">
+                <%= v.color %>
               </button>
             <% end %>
           </div>
         </div>
 
-        <div class="mt-10 flex gap-4">
-          <button class="flex-1 bg-blue-600 border border-transparent rounded-xl py-4 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition shadow-lg">
-            Thêm vào giỏ hàng
-          </button>
-          <button class="bg-gray-100 p-4 rounded-xl text-gray-400 hover:text-red-500 transition">
-            <svg class="h-6 w-6 shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <div class="mt-10">
+          <button class="w-full bg-[#B22234] text-white py-4 font-bold text-xs uppercase tracking-widest hover:bg-black transition-all">
+            THÊM VÀO GIỎ HÀNG
           </button>
         </div>
       </div>
+
     </div>
 
-    <div class="mt-20 border-t border-gray-100 pt-10">
-      <h3 class="text-2xl font-bold text-gray-900 mb-8">Thông số kỹ thuật</h3>
-      <div class="bg-gray-50 rounded-2xl overflow-hidden border border-gray-100">
-        <dl class="divide-y divide-gray-200">
-          <% if @product.metadata.present? %>
-            <% @product.metadata.each do |key, value| %>
-              <div class="grid grid-cols-3 py-4 px-6 hover:bg-white transition">
-                <dt class="text-sm font-semibold text-gray-500 uppercase tracking-wider"><%= key.to_s.humanize %></dt>
-                <dd class="text-sm text-gray-900 col-span-2 font-medium">
-                  <%= value.is_a?(Array) ? value.join(", ") : value %>
-                </dd>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="p-6 text-gray-400 italic">Chưa có thông số kỹ thuật cụ thể.</div>
+    <div class="mt-24 border-t border-gray-100 pt-16 grid lg:grid-cols-3 gap-16 px-4 lg:px-0">
+      <div class="lg:col-span-2">
+        <h2 class="text-2xl font-serif mb-8 italic">Product Details</h2>
+        <div class="prose prose-neutral max-w-none text-gray-600">
+          <%= @product.details %>
+        </div>
+      </div>
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-widest mb-8">Specifications</h2>
+        <dl class="space-y-4">
+          <% @product.specifications.order(:position).each do |spec| %>
+            <div class="flex justify-between border-b border-gray-50 pb-2">
+              <dt class="text-xs text-gray-400 uppercase"><%= spec.name %></dt>
+              <dd class="text-xs text-gray-900 font-bold"><%= spec.content %></dd>
+            </div>
           <% end %>
         </dl>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+  /* Clean Scrollbar */
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  /* Typography for Rich Text */
+  .prose ul { list-style-type: none; padding-left: 0; }
+  .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+  .prose li::before { content: "•"; position: absolute; left: 0; color: #ccc; }
+</style>
