@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ZATOS CMS - Danh sách sản phẩm</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display antialiased">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 border-r border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 flex flex-col justify-between">
+<div class="flex flex-col gap-6 p-4">
+<div class="px-2">
+<h1 class="text-primary text-xl font-bold tracking-tight">ZATOS CMS</h1>
+<p class="text-slate-500 text-xs font-medium uppercase tracking-wider mt-1">Admin Panel</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Tổng quan</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-blue-400" href="#">
+<span class="material-symbols-outlined fill-current">inventory_2</span>
+<span class="text-sm font-medium">Sản phẩm</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">shopping_cart</span>
+<span class="text-sm font-medium">Đơn hàng</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Khách hàng</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">analytics</span>
+<span class="text-sm font-medium">Báo cáo</span>
+</a>
+</nav>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Cài đặt</span>
+</a>
+<div class="flex items-center gap-3 px-3 py-4 mt-2">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300">AD</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900 dark:text-white">Admin User</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">admin@taros.vn</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+<div class="mx-auto max-w-6xl flex flex-col gap-8">
+<!-- Header Section -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Danh sách sản phẩm</h2>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Quản lý kho khóa cửa thông minh ZATOS cao cấp</p>
+</div>
+<button class="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm shadow-blue-200 dark:shadow-none transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Thêm sản phẩm
+                </button>
+</div>
+<!-- Filter & Search Bar -->
+<div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+<div class="relative w-full md:max-w-md">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full py-2.5 pl-10 pr-4 text-sm bg-slate-50 dark:bg-slate-800 border-transparent focus:border-primary focus:ring-0 focus:bg-white dark:focus:bg-slate-800 rounded-lg text-slate-900 dark:text-slate-100 placeholder-slate-400 transition-colors" placeholder="Tìm kiếm theo tên, SKU..." type="text"/>
+</div>
+<div class="flex gap-3 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+<select class="py-2.5 pl-3 pr-8 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer min-w-[140px]">
+<option>Tất cả danh mục</option>
+<option>Khóa vân tay</option>
+<option>Khóa thẻ từ</option>
+<option>Khóa khuôn mặt</option>
+</select>
+<select class="py-2.5 pl-3 pr-8 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 focus:border-primary focus:ring-1 focus:ring-primary cursor-pointer min-w-[140px]">
+<option>Trạng thái</option>
+<option>Còn hàng</option>
+<option>Hết hàng</option>
+</select>
+</div>
+</div>
+<!-- Table Section -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider w-24">Hình ảnh</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Mã SKU</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Tên sản phẩm</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Danh mục</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider text-right">Giá (VNĐ)</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider">Trạng thái</th>
+<th class="py-4 px-6 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400 tracking-wider text-right">Hành động</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="py-4 px-6">
+<div class="h-12 w-12 rounded-lg bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">door_front</span>
+</div>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">TR-001</td>
+<td class="py-4 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">ZATOS T1 Elite</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Black Matte Finish</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-100 dark:border-blue-800">
+                                        Vân tay
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">8.500.000</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-emerald-500"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Còn hàng</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors" title="Sửa">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors" title="Xóa">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="py-4 px-6">
+<div class="h-12 w-12 rounded-lg bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">nest_cam_indoor</span>
+</div>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">TR-002</td>
+<td class="py-4 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">ZATOS X5 Pro</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Gold Plated</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-100 dark:border-purple-800">
+                                        Khuôn mặt
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">12.900.000</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-emerald-500"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Còn hàng</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors" title="Sửa">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors" title="Xóa">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="py-4 px-6">
+<div class="h-12 w-12 rounded-lg bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">pin</span>
+</div>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">TR-003</td>
+<td class="py-4 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">ZATOS S2 Slim</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Silver Alloy</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-600">
+                                        Mã số
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">5.200.000</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-amber-500"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Sắp hết</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors" title="Sửa">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors" title="Xóa">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="py-4 px-6">
+<div class="h-12 w-12 rounded-lg bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">sensor_door</span>
+</div>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">TR-004</td>
+<td class="py-4 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">ZATOS Glass G1</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Glass Door Exclusive</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-cyan-50 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-300 border border-cyan-100 dark:border-cyan-800">
+                                        Cửa kính
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">4.800.000</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-emerald-500"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Còn hàng</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors" title="Sửa">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors" title="Xóa">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+<td class="py-4 px-6">
+<div class="h-12 w-12 rounded-lg bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">credit_card</span>
+</div>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-600 dark:text-slate-300">TR-005</td>
+<td class="py-4 px-6">
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">ZATOS Hotel H1</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Hotel System Ready</span>
+</div>
+</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 border border-indigo-100 dark:border-indigo-800">
+                                        Thẻ từ
+                                    </span>
+</td>
+<td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">3.500.000</td>
+<td class="py-4 px-6">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-slate-400"></div>
+<span class="text-sm text-slate-600 dark:text-slate-300">Hết hàng</span>
+</div>
+</td>
+<td class="py-4 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 hover:text-primary dark:text-slate-400 dark:hover:text-blue-400 transition-colors" title="Sửa">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors" title="Xóa">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+<p class="text-sm text-slate-500 dark:text-slate-400 hidden sm:block">
+                        Hiển thị <span class="font-medium text-slate-900 dark:text-white">1</span> đến <span class="font-medium text-slate-900 dark:text-white">5</span> trong tổng số <span class="font-medium text-slate-900 dark:text-white">24</span> sản phẩm
+                    </p>
+<div class="flex items-center gap-1.5 w-full sm:w-auto justify-center sm:justify-end">
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="min-w-[36px] h-9 rounded-lg bg-primary text-white text-sm font-medium hover:bg-blue-700 transition-colors">1</button>
+<button class="min-w-[36px] h-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium transition-colors">2</button>
+<button class="min-w-[36px] h-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium transition-colors">3</button>
+<span class="min-w-[36px] h-9 flex items-center justify-center text-slate-400 text-sm">...</span>
+<button class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
