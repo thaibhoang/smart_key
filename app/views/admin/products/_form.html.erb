@@ -1,0 +1,562 @@
+<%= form_with model: [:admin, @product],
+              html: { multipart: true },
+              data: { controller: "product-form" },
+              class: "space-y-8" do |f| %>
+  <% if @product.errors.any? %>
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+      <p class="font-semibold mb-2">Có <%= @product.errors.count %> lỗi, vui lòng kiểm tra lại:</p>
+      <ul class="list-disc list-inside space-y-1">
+        <% @product.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Thông tin cơ bản -->
+  <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+    <h2 class="mb-6 flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-50">
+      <span class="material-symbols-outlined text-primary">info</span>
+      Thông tin cơ bản
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="md:col-span-2">
+        <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Tên sản phẩm</label>
+        <%= f.text_field :name,
+                         class:
+                           "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
+                         placeholder: "Nhập tên sản phẩm..." %>
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Thương hiệu</label>
+        <%= f.text_field :brand,
+                         class:
+                           "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
+                         placeholder: "VD: TAROS Authentic" %>
+      </div>
+
+      <div>
+        <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Danh mục</label>
+        <%= f.collection_select :category_id,
+                                @categories,
+                                :id,
+                                :name,
+                                { prompt: "Chọn danh mục" },
+                                class:
+                                  "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nội dung chi tiết -->
+  <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+    <h2 class="mb-2 flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-50">
+      <span class="material-symbols-outlined text-primary">description</span>
+      Nội dung chi tiết
+    </h2>
+
+    <div>
+      <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Tính năng chính (Ngắn gọn)</label>
+      <div class="rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900/60">
+        <div class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900 px-3 py-2 flex gap-2">
+          <span class="material-symbols-outlined text-[18px] text-slate-500">format_bold</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-500">format_list_bulleted</span>
+        </div>
+        <div class="p-3 prose prose-sm max-w-none dark:prose-invert">
+          <%= f.rich_text_area :main_features,
+                               class: "min-h-[120px] border-0 bg-transparent focus:ring-0 text-sm" %>
+        </div>
+      </div>
+      <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        Hiển thị ở đầu trang sản phẩm, bên cạnh hình ảnh.
+      </p>
+    </div>
+
+    <div>
+      <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Mô tả chi tiết</label>
+      <div class="rounded-lg border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-50 dark:bg-slate-900/60">
+        <div class="border-b border-slate-200 dark:border-slate-800 bg-slate-100/70 dark:bg-slate-900 px-3 py-2 flex gap-2 flex-wrap">
+          <span class="material-symbols-outlined text-[18px] text-slate-500">format_bold</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-500">format_italic</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-500">format_underlined</span>
+          <span class="material-symbols-outlined text-[18px] text-slate-500">image</span>
+        </div>
+        <div class="p-3 prose prose-sm max-w-none dark:prose-invert min-h-[200px]">
+          <%= f.rich_text_area :details,
+                               class: "border-0 bg-transparent focus:ring-0 text-sm min-h-[200px]" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Danh sách phiên bản + card chi tiết -->
+  <div
+    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm"
+    data-controller="variant-panel"
+  >
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-50">
+        <span class="material-symbols-outlined text-primary">style</span>
+        Danh sách phiên bản
+      </h2>
+      <button
+        type="button"
+        class="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm font-medium text-primary hover:bg-slate-50 dark:hover:bg-slate-800"
+        data-action="click->variant-panel#new"
+      >
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        Thêm phiên bản
+      </button>
+    </div>
+
+    <!-- List biến thể -->
+    <div class="space-y-2 mb-4" data-variant-panel-target="list">
+      <% index_counter = 0 %>
+      <%= f.fields_for :variants do |vf| %>
+        <% idx = index_counter %>
+        <% index_counter += 1 %>
+        <div
+          class="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 px-4 py-3"
+          data-variant-panel-target="item"
+          data-variant-panel-id-value="<%= idx %>"
+        >
+          <div class="flex flex-col gap-0.5">
+            <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+              <%= vf.object.sku.presence || "Chưa có SKU" %>
+            </span>
+            <div class="flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <% if vf.object.color.present? %>
+                <span>Màu: <%= vf.object.color %></span>
+              <% end %>
+              <% if vf.object.price.present? %>
+                <span>
+                  Giá:
+                  <%= number_to_currency(vf.object.price, unit: "", precision: 0, delimiter: ".") %> VNĐ
+                </span>
+              <% end %>
+              <% if vf.object.stock.present? %>
+                <span>Tồn: <%= vf.object.stock %></span>
+              <% end %>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <%= vf.hidden_field :id %>
+            <%= vf.hidden_field :_destroy, value: "0", data: { "variant-panel-target": "destroyField" } %>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg px-2 py-1 text-xs font-medium text-slate-600 hover:text-primary hover:bg-slate-100 dark:text-slate-300 dark:hover:text-blue-400 dark:hover:bg-slate-800"
+              data-action="click->variant-panel#edit"
+            >
+              <span class="material-symbols-outlined text-[18px] mr-1">edit</span>
+              Sửa
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-lg px-2 py-1 text-xs font-medium text-slate-500 hover:text-red-500 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20"
+              data-action="click->variant-panel#remove"
+            >
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card chi tiết tương ứng (ẩn, sẽ được bật qua Stimulus) -->
+        <div
+          class="mt-3 hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 p-4"
+          data-variant-panel-target="panel"
+          data-variant-panel-id-value="<%= idx %>"
+        >
+          <div class="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                Phiên bản: <%= vf.object.sku.presence || "Mới" %>
+              </h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">
+                Cập nhật thông tin và tối đa 10 ảnh cho phiên bản này.
+              </p>
+            </div>
+            <button
+              type="button"
+              class="inline-flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
+              data-action="click->variant-panel#close"
+            >
+              <span class="material-symbols-outlined text-[18px] mr-1">close</span>
+              Đóng
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">SKU</label>
+              <%= vf.text_field :sku,
+                                class:
+                                  "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                placeholder: "VD: TAR-X1-BLK" %>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Màu sắc</label>
+              <%= vf.text_field :color,
+                                class:
+                                  "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                placeholder: "Đen nhám, Vàng đồng..." %>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Giá bán (VNĐ)</label>
+              <%= vf.number_field :price,
+                                  class:
+                                    "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                  step: 1000,
+                                  min: 0 %>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Tồn kho</label>
+              <%= vf.number_field :stock,
+                                  class:
+                                    "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                  min: 0 %>
+            </div>
+          </div>
+
+          <!-- Grid ảnh -->
+          <div
+            class="mt-4"
+            data-controller="variant-images"
+            data-variant-images-max-slots-value="10"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                Hình ảnh phiên bản
+              </h4>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500">
+                Tối đa 10 ảnh, ưu tiên tỉ lệ vuông.
+              </p>
+            </div>
+              <div
+                class="grid grid-cols-3 sm:grid-cols-5 gap-3"
+                data-variant-images-target="grid"
+              >
+              <% existing_images = vf.object.respond_to?(:images) ? vf.object.images.attachments.order(:created_at) : [] %>
+              <% (0...10).each do |slot_index| %>
+                <% image_attachment = existing_images && existing_images[slot_index] %>
+                <div
+                  class="relative aspect-square rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-center overflow-hidden cursor-pointer group"
+                  data-variant-images-target="slot"
+                  data-action="click->variant-images#select"
+                >
+                  <% if image_attachment.present? %>
+                    <%= image_tag image_attachment.variant(:thumb),
+                                  class: "h-full w-full object-cover" %>
+                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <span class="material-symbols-outlined text-[18px] text-white">edit</span>
+                      <span class="text-[11px] font-medium text-white">Đổi ảnh</span>
+                    </div>
+                  <% else %>
+                    <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                      <span class="material-symbols-outlined text-[26px] mb-1">add_photo_alternate</span>
+                      <span class="text-[11px] font-medium">Thêm ảnh</span>
+                    </div>
+                  <% end %>
+                  <input
+                    type="file"
+                    name="product[variants_attributes][<%= vf.index %>][images][]"
+                    accept="image/*"
+                    class="hidden"
+                    data-variant-images-target="fileInput"
+                    data-action="change->variant-images#changed"
+                  >
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Template cho variant mới -->
+      <template data-variant-panel-target="template">
+        <%
+          new_variant = @product.variants.build
+        %>
+        <%= f.fields_for :variants, new_variant, child_index: "NEW_RECORD" do |vf| %>
+          <div
+            class="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 px-4 py-3"
+            data-variant-panel-target="item"
+            data-variant-panel-id-value="NEW_RECORD"
+          >
+            <div class="flex flex-col gap-0.5">
+              <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Chưa có SKU
+              </span>
+              <div class="flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400"></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <%= vf.hidden_field :id %>
+              <%= vf.hidden_field :_destroy, value: "0", data: { "variant-panel-target": "destroyField" } %>
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-lg px-2 py-1 text-xs font-medium text-slate-600 hover:text-primary hover:bg-slate-100 dark:text-slate-300 dark:hover:text-blue-400 dark:hover:bg-slate-800"
+                data-action="click->variant-panel#edit"
+              >
+                <span class="material-symbols-outlined text-[18px] mr-1">edit</span>
+                Sửa
+              </button>
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-lg px-2 py-1 text-xs font-medium text-slate-500 hover:text-red-500 hover:bg-red-50 dark:text-slate-400 dark:hover:text-red-400 dark:hover:bg-red-900/20"
+                data-action="click->variant-panel#remove"
+              >
+                <span class="material-symbols-outlined text-[18px]">delete</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="mt-3 hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 p-4"
+            data-variant-panel-target="panel"
+            data-variant-panel-id-value="NEW_RECORD"
+          >
+            <div class="flex items-start justify-between gap-4 mb-4">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-50">
+                  Phiên bản mới
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  Cập nhật thông tin và tối đa 10 ảnh cho phiên bản này.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="inline-flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800"
+                data-action="click->variant-panel#close"
+              >
+                <span class="material-symbols-outlined text-[18px] mr-1">close</span>
+                Đóng
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">SKU</label>
+                <%= vf.text_field :sku,
+                                  class:
+                                    "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                  placeholder: "VD: TAR-X1-BLK" %>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Màu sắc</label>
+                <%= vf.text_field :color,
+                                  class:
+                                    "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                  placeholder: "Đen nhám, Vàng đồng..." %>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Giá bán (VNĐ)</label>
+                <%= vf.number_field :price,
+                                    class:
+                                      "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                    step: 1000,
+                                    min: 0 %>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Tồn kho</label>
+                <%= vf.number_field :stock,
+                                    class:
+                                      "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                    min: 0 %>
+              </div>
+            </div>
+
+            <div
+              class="mt-4"
+              data-controller="variant-images"
+              data-variant-images-max-slots-value="10"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                  Hình ảnh phiên bản
+                </h4>
+                <p class="text-[11px] text-slate-400 dark:text-slate-500">
+                  Tối đa 10 ảnh, ưu tiên tỉ lệ vuông.
+                </p>
+              </div>
+              <div
+                class="grid grid-cols-3 sm:grid-cols-5 gap-3"
+                data-variant-images-target="grid"
+              >
+                <% (0...10).each do |slot_index| %>
+                  <div
+                    class="relative aspect-square rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-center overflow-hidden cursor-pointer group"
+                    data-variant-images-target="slot"
+                    data-action="click->variant-images#select"
+                  >
+                    <div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500">
+                      <span class="material-symbols-outlined text-[26px] mb-1">add_photo_alternate</span>
+                      <span class="text-[11px] font-medium">Thêm ảnh</span>
+                    </div>
+                    <input
+                      type="file"
+                      name="product[variants_attributes][NEW_RECORD][images][]"
+                      accept="image/*"
+                      class="hidden"
+                      data-variant-images-target="fileInput"
+                      data-action="change->variant-images#changed"
+                    >
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </template>
+    </div>
+  </div>
+
+  <!-- Thông số kỹ thuật -->
+  <div
+    class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm"
+    data-controller="specifications"
+    data-specifications-target="container"
+  >
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-50">
+        <span class="material-symbols-outlined text-primary">tune</span>
+        Thông số kỹ thuật
+      </h2>
+      <button
+        type="button"
+        class="inline-flex items-center gap-1 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-sm font-medium text-primary hover:bg-slate-50 dark:hover:bg-slate-800"
+        data-action="click->specifications#add"
+      >
+        <span class="material-symbols-outlined text-[18px]">add</span>
+        Thêm thông số
+      </button>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <div class="hidden md:grid grid-cols-12 gap-4 px-2 text-xs font-semibold uppercase text-slate-500 dark:text-slate-400">
+        <div class="col-span-1 text-center">TT</div>
+        <div class="col-span-4">Tên thông số</div>
+        <div class="col-span-6">Nội dung</div>
+        <div class="col-span-1 text-right"></div>
+      </div>
+
+      <div
+        class="flex flex-col gap-3"
+        data-specifications-target="list"
+      >
+        <%= f.fields_for :specifications do |sf| %>
+          <div
+            class="group flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 p-3 hover:border-primary/50 transition-colors"
+            data-specifications-target="item"
+            draggable="true"
+            data-action="dragstart->specifications#dragStart dragover->specifications#dragOver drop->specifications#drop"
+          >
+            <div class="md:col-span-1 flex md:justify-center w-full md:w-auto">
+              <span class="material-symbols-outlined cursor-move text-slate-400 group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-200">
+                drag_indicator
+              </span>
+            </div>
+            <div class="md:col-span-4 w-full">
+              <%= sf.text_field :name,
+                                class:
+                                  "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
+                                placeholder: "Tên thông số" %>
+            </div>
+            <div class="md:col-span-6 w-full">
+              <%= sf.text_field :content,
+                                class:
+                                  "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
+                                placeholder: "Nội dung thông số" %>
+            </div>
+            <div class="md:col-span-1 flex justify-end w-full md:w-auto">
+              <%= sf.hidden_field :position,
+                                  value: sf.object.position || 0,
+                                  data: { specifications_target: "positionField" } %>
+              <%= sf.hidden_field :_destroy, value: "0", data: { specifications_target: "destroyField" } %>
+              <button
+                type="button"
+                class="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1"
+                data-action="click->specifications#remove"
+              >
+                <span class="material-symbols-outlined text-[20px]">delete</span>
+              </button>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Template row cho specification mới -->
+      <template data-specifications-target="template">
+        <div
+          class="group flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 p-3 hover:border-primary/50 transition-colors"
+          data-specifications-target="item"
+          draggable="true"
+          data-action="dragstart->specifications#dragStart dragover->specifications#dragOver drop->specifications#drop"
+        >
+          <div class="md:col-span-1 flex md:justify-center w-full md:w-auto">
+            <span class="material-symbols-outlined cursor-move text-slate-400 group-hover:text-slate-700 dark:text-slate-500 dark:group-hover:text-slate-200">
+              drag_indicator
+            </span>
+          </div>
+          <div class="md:col-span-4 w-full">
+            <input
+              type="text"
+              name="product[specifications_attributes][NEW_RECORD][name]"
+              class="w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary"
+              placeholder="Tên thông số"
+            >
+          </div>
+          <div class="md:col-span-6 w-full">
+            <input
+              type="text"
+              name="product[specifications_attributes][NEW_RECORD][content]"
+              class="w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary"
+              placeholder="Nội dung thông số"
+            >
+          </div>
+          <div class="md:col-span-1 flex justify-end w-full md:w-auto">
+            <input
+              type="hidden"
+              name="product[specifications_attributes][NEW_RECORD][position]"
+              value="0"
+              data-specifications-target="positionField"
+            >
+            <input
+              type="hidden"
+              name="product[specifications_attributes][NEW_RECORD][_destroy]"
+              value="0"
+              data-specifications-target="destroyField"
+            >
+            <button
+              type="button"
+              class="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1"
+              data-action="click->specifications#remove"
+            >
+              <span class="material-symbols-outlined text-[20px]">delete</span>
+            </button>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Footer actions (không có xem trước) -->
+  <div class="z-10 bg-gradient-to-t from-background-light/90 dark:from-background-dark/90 via-background-light/70 dark:via-background-dark/70 to-transparent">
+    <div class="max-w-6xl mx-auto flex justify-end">
+      <div class="inline-flex items-center justify-end gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 px-4 py-3 shadow-lg backdrop-blur-sm">
+        <%= link_to "Hủy", admin_products_path,
+                    class:
+                      "rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-transparent px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800" %>
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/30 hover:bg-blue-700 transition-colors"
+        >
+          <span class="material-symbols-outlined text-[20px]">save</span>
+          Lưu thông tin
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+
