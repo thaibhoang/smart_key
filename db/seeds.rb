@@ -13,7 +13,7 @@ categories = [
 # Bước 3: Tạo 10 Sản phẩm mẫu bằng vòng lặp
 puts "Đang tạo 10 sản phẩm..."
 
-10.times do |i|
+20.times do |i|
   category = categories.sample # Lấy ngẫu nhiên 1 category
   brand = ["Samsung", "Kaadas", "Xiaomi", "Yale"].sample
   

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TAROS CMS - Chỉnh sửa sản phẩm</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1152d4",
+                        "primary-content": "#ffffff",
+                        "primary-dark": "#0a3aa6",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2230",
+                        "text-light": "#111318",
+                        "text-dark": "#e2e8f0",
+                        "text-secondary-light": "#64748b",
+                        "text-secondary-dark": "#94a3b8",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#2d3748",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-light dark:text-text-dark antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-50 flex items-center justify-between border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark px-6 py-3 shadow-sm">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">token</span>
+<h2 class="text-xl font-bold tracking-tight text-text-light dark:text-text-dark">TAROS CMS</h2>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-background-light dark:hover:bg-background-dark text-text-secondary-light dark:text-text-secondary-dark transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-background-light dark:hover:bg-background-dark text-text-secondary-light dark:text-text-secondary-dark transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="h-10 w-10 overflow-hidden rounded-full border border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark" data-alt="User profile avatar">
+<img alt="User Avatar" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWb847oQdUJUJ34LhVUTpW1IslW6_QfB8mflXJM3VHISjW0hT3SztSRdIEgb2s6a9iYB8WXpr1qUQz_NCgfTbQ-VmT_JWeWLS900CJmf4gTdYC8tqPtDPyqi7kRJle-syhhdIlYxr93sTuDZgXu1-SJotUesDXq36JSH149QAKc7MoUl_cYdptsLI01_ZvOhu0gIJa0ky4ji--wDg8CEC5_LLwjavxJC0qnYp6n_Kc604vkSYsxQ95GN-pyp5YmD7dMrgiLRStz4A"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- Sidebar Navigation -->
+<aside class="hidden w-64 flex-col border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark lg:flex">
+<div class="flex flex-col gap-1 p-4">
+<div class="px-3 py-2">
+<h3 class="text-xs font-semibold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Menu Chính</h3>
+</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-medium text-primary dark:text-blue-400" href="#">
+<span class="material-symbols-outlined font-filled">inventory_2</span>
+                        Sản phẩm
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+                        Đơn hàng
+                        <span class="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">3</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+                        Khách hàng
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">campaign</span>
+                        Marketing
+                    </a>
+</div>
+<div class="mt-auto flex flex-col gap-1 p-4 border-t border-border-light dark:border-border-dark">
+<div class="px-3 py-2">
+<h3 class="text-xs font-semibold uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark">Hệ thống</h3>
+</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                        Cài đặt
+                    </a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark hover:text-red-500 transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+                        Đăng xuất
+                    </a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 lg:p-10">
+<div class="mx-auto max-w-5xl">
+<!-- Page Header -->
+<div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+<div>
+<div class="flex items-center gap-2 text-sm text-text-secondary-light dark:text-text-secondary-dark mb-1">
+<span class="hover:underline cursor-pointer">Sản phẩm</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-text-light dark:text-text-dark">Chỉnh sửa</span>
+</div>
+<h1 class="text-3xl font-bold text-text-light dark:text-text-dark tracking-tight">Chỉnh sửa sản phẩm</h1>
+<p class="mt-1 text-text-secondary-light dark:text-text-secondary-dark">Cập nhật thông tin chi tiết cho khóa thông minh TAROS-X1</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark px-4 py-2 text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark hover:bg-background-light dark:hover:bg-background-dark transition-colors">
+                                Hủy bỏ
+                            </button>
+<button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark transition-colors shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                                Lưu thay đổi
+                            </button>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<!-- Section: Basic Info -->
+<div class="rounded-xl border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-6 shadow-sm">
+<h2 class="mb-6 flex items-center gap-2 text-lg font-bold text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined text-primary">info</span>
+                                Thông tin cơ bản
+                            </h2>
+<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+<div class="col-span-2">
+<label class="mb-2 block text-sm font-medium text-text-light dark:text-text-dark">Tên sản phẩm</label>
+<input class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/50 px-4 py-2.5 text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary dark:focus:border-primary text-sm" placeholder="Nhập tên sản phẩm..." type="text" value="Khóa cửa thông minh TAROS-X1 Cao Cấp"/>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-text-light dark:text-text-dark">Thương hiệu</label>
+<select class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/50 px-4 py-2.5 text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary dark:focus:border-primary text-sm">
+<option selected="" value="taros">TAROS Authentic</option>
+<option value="other">Khác</option>
+</select>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-text-light dark:text-text-dark">Danh mục</label>
+<select class="w-full rounded-lg border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/50 px-4 py-2.5 text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary dark:focus:border-primary text-sm">
+<option selected="" value="smart-lock">Khóa cửa thông minh</option>
+<option value="accessories">Phụ kiện khóa</option>
+<option value="camera">Camera an ninh</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Section: Variants List -->
+<div class="rounded-xl border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-6 shadow-sm">
+<div class="mb-6 flex items-center justify-between">
+<h2 class="flex items-center gap-2 text-lg font-bold text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined text-primary">style</span>
+                                    Danh sách phiên bản
+                                </h2>
+<button class="text-sm font-medium text-primary hover:underline">
+                                    + Thêm phiên bản
+                                </button>
+</div>
+<div class="overflow-x-auto rounded-lg border border-border-light dark:border-border-dark">
+<table class="w-full text-left text-sm text-text-secondary-light dark:text-text-secondary-dark">
+<thead class="bg-background-light dark:bg-background-dark text-xs uppercase text-text-secondary-light dark:text-text-secondary-dark">
+<tr>
+<th class="px-6 py-3 font-semibold" scope="col">SKU</th>
+<th class="px-6 py-3 font-semibold" scope="col">Màu sắc</th>
+<th class="px-6 py-3 font-semibold" scope="col">Giá bán (VND)</th>
+<th class="px-6 py-3 font-semibold" scope="col">Tồn kho</th>
+<th class="px-6 py-3 font-semibold text-right" scope="col">Thao tác</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light dark:divide-border-dark">
+<tr class="hover:bg-background-light/50 dark:hover:bg-background-dark/50 transition-colors">
+<td class="px-6 py-4 font-medium text-text-light dark:text-text-dark">TAR-X1-BLK</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full bg-black shadow-sm ring-1 ring-border-light"></span>
+                                                    Đen nhám
+                                                </div>
+</td>
+<td class="px-6 py-4 text-text-light dark:text-text-dark">8.500.000</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                                    Sẵn hàng (42)
+                                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary-light hover:text-primary dark:text-text-secondary-dark dark:hover:text-primary mr-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary-light hover:text-red-500 dark:text-text-secondary-dark dark:hover:text-red-400">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-background-light/50 dark:hover:bg-background-dark/50 transition-colors">
+<td class="px-6 py-4 font-medium text-text-light dark:text-text-dark">TAR-X1-GLD</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full bg-yellow-500 shadow-sm ring-1 ring-border-light"></span>
+                                                    Vàng đồng
+                                                </div>
+</td>
+<td class="px-6 py-4 text-text-light dark:text-text-dark">8.900.000</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
+                                                    Sắp hết (5)
+                                                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-text-secondary-light hover:text-primary dark:text-text-secondary-dark dark:hover:text-primary mr-2">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="text-text-secondary-light hover:text-red-500 dark:text-text-secondary-dark dark:hover:text-red-400">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Section: Detailed Content -->
+<div class="rounded-xl border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-6 shadow-sm">
+<h2 class="mb-6 flex items-center gap-2 text-lg font-bold text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined text-primary">description</span>
+                                Nội dung chi tiết
+                            </h2>
+<div class="grid grid-cols-1 gap-6">
+<div>
+<label class="mb-2 block text-sm font-medium text-text-light dark:text-text-dark">Tính năng chính (Ngắn gọn)</label>
+<div class="rounded-lg border border-border-light dark:border-border-dark overflow-hidden">
+<div class="border-b border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark px-3 py-2 flex gap-2">
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_list_bulleted</span></button>
+</div>
+<textarea class="w-full border-none bg-transparent p-4 text-sm text-text-light dark:text-text-dark focus:ring-0 min-h-[120px]" placeholder="Nhập các tính năng nổi bật..."></textarea>
+</div>
+<p class="mt-1 text-xs text-text-secondary-light dark:text-text-secondary-dark">Hiển thị ở đầu trang sản phẩm, bên cạnh hình ảnh.</p>
+</div>
+<div>
+<label class="mb-2 block text-sm font-medium text-text-light dark:text-text-dark">Mô tả chi tiết</label>
+<div class="rounded-lg border border-border-light dark:border-border-dark overflow-hidden min-h-[300px] flex flex-col">
+<div class="border-b border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark px-3 py-2 flex gap-2 flex-wrap">
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_underlined</span></button>
+<div class="h-6 w-px bg-border-light dark:bg-border-dark mx-1 self-center"></div>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_align_left</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_align_center</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">format_align_right</span></button>
+<div class="h-6 w-px bg-border-light dark:bg-border-dark mx-1 self-center"></div>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">link</span></button>
+<button class="p-1 hover:bg-black/5 dark:hover:bg-white/10 rounded"><span class="material-symbols-outlined text-[18px]">image</span></button>
+</div>
+<div class="flex-1 p-4 bg-transparent text-sm text-text-light dark:text-text-dark relative">
+<p class="mb-4">Khóa cửa thông minh TAROS-X1 mang đến sự an toàn tuyệt đối cho ngôi nhà của bạn với công nghệ nhận diện vân tay FPC Thụy Điển.</p>
+<div class="h-40 w-full rounded bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4 border border-dashed border-gray-300 dark:border-gray-700">
+<span class="text-text-secondary-light dark:text-text-secondary-dark text-sm flex items-center gap-2">
+<span class="material-symbols-outlined">image</span> Image Placeholder
+                                                </span>
+</div>
+<p>Thiết kế sang trọng, hiện đại phù hợp với mọi loại cửa gỗ, cửa thép.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Technical Specs -->
+<div class="rounded-xl border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark p-6 shadow-sm">
+<div class="mb-6 flex items-center justify-between">
+<h2 class="flex items-center gap-2 text-lg font-bold text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined text-primary">tune</span>
+                                    Thông số kỹ thuật
+                                </h2>
+<button class="text-sm font-medium text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                                    Thêm thông số
+                                </button>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Header Row -->
+<div class="hidden md:grid grid-cols-12 gap-4 px-2 text-xs font-semibold uppercase text-text-secondary-light dark:text-text-secondary-dark">
+<div class="col-span-1 text-center">TT</div>
+<div class="col-span-4">Tên thông số</div>
+<div class="col-span-6">Nội dung</div>
+<div class="col-span-1 text-right"></div>
+</div>
+<!-- Dynamic Rows -->
+<div class="group flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center rounded-lg border border-border-light dark:border-border-dark bg-background-light/30 dark:bg-background-dark/30 p-3 hover:border-primary/50 transition-colors">
+<div class="md:col-span-1 flex md:justify-center w-full md:w-auto">
+<span class="material-symbols-outlined cursor-move text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">drag_indicator</span>
+</div>
+<div class="md:col-span-4 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Chất liệu"/>
+</div>
+<div class="md:col-span-6 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Hợp kim kẽm cao cấp, Kính cường lực"/>
+</div>
+<div class="md:col-span-1 flex justify-end w-full md:w-auto">
+<button class="text-text-secondary-light hover:text-red-500 dark:text-text-secondary-dark dark:hover:text-red-400 p-1">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<div class="group flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center rounded-lg border border-border-light dark:border-border-dark bg-background-light/30 dark:bg-background-dark/30 p-3 hover:border-primary/50 transition-colors">
+<div class="md:col-span-1 flex md:justify-center w-full md:w-auto">
+<span class="material-symbols-outlined cursor-move text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">drag_indicator</span>
+</div>
+<div class="md:col-span-4 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Phương thức mở khóa"/>
+</div>
+<div class="md:col-span-6 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Vân tay, Mật khẩu, Thẻ từ, Chìa cơ, App"/>
+</div>
+<div class="md:col-span-1 flex justify-end w-full md:w-auto">
+<button class="text-text-secondary-light hover:text-red-500 dark:text-text-secondary-dark dark:hover:text-red-400 p-1">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+<div class="group flex flex-col md:grid md:grid-cols-12 gap-3 items-start md:items-center rounded-lg border border-border-light dark:border-border-dark bg-background-light/30 dark:bg-background-dark/30 p-3 hover:border-primary/50 transition-colors">
+<div class="md:col-span-1 flex md:justify-center w-full md:w-auto">
+<span class="material-symbols-outlined cursor-move text-text-secondary-light dark:text-text-secondary-dark hover:text-text-light dark:hover:text-text-dark">drag_indicator</span>
+</div>
+<div class="md:col-span-4 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="Nguồn điện"/>
+</div>
+<div class="md:col-span-6 w-full">
+<input class="w-full rounded border-border-light dark:border-border-dark bg-white dark:bg-surface-dark px-3 py-2 text-sm text-text-light dark:text-text-dark focus:border-primary focus:ring-1 focus:ring-primary" type="text" value="4 Pin AA Alkaline (khoảng 12 tháng)"/>
+</div>
+<div class="md:col-span-1 flex justify-end w-full md:w-auto">
+<button class="text-text-secondary-light hover:text-red-500 dark:text-text-secondary-dark dark:hover:text-red-400 p-1">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer Action -->
+<div class="sticky bottom-4 z-20 mt-4 flex items-center justify-between rounded-xl border border-border-light dark:border-border-dark bg-surface-light/90 dark:bg-surface-dark/90 p-4 shadow-xl backdrop-blur-sm sm:justify-end sm:gap-4">
+<span class="text-sm text-text-secondary-light dark:text-text-secondary-dark sm:hidden">Chưa lưu thay đổi</span>
+<div class="flex w-full gap-3 sm:w-auto">
+<button class="flex-1 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-transparent px-6 py-2.5 text-sm font-semibold text-text-light dark:text-text-dark hover:bg-background-light dark:hover:bg-background-dark sm:flex-none">
+                                    Xem trước
+                                </button>
+<button class="flex-1 flex items-center justify-center gap-2 rounded-lg bg-primary px-8 py-2.5 text-sm font-bold text-white shadow-lg shadow-primary/30 hover:bg-primary-dark sm:flex-none">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                                    Lưu thông tin
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- Background Pattern -->
+<div class="fixed inset-0 -z-10 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" data-alt="Abstract dot pattern background" style="background-image: radial-gradient(#1152d4 1px, transparent 1px); background-size: 24px 24px;">
+</div>
+</body></html>
