@@ -1,112 +1,122 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["mainImage", "thumbnail", "price"]
+  static targets = ["mainImage", "thumbnail", "price", "dot", "variantGallery"]
 
   connect() {
     this.refreshImageList()
     this.currentIndex = 0
     
-    // Khởi tạo biến cho tính năng Swipe
     this.touchStartX = 0
     this.touchEndX = 0
+
+    // Đảm bảo ảnh đầu tiên được highlight
+    this._updateDisplay()
   }
 
-  // Cập nhật danh sách ảnh hiện có
   refreshImageList() {
-    this.images = Array.from(this.thumbnailTargets).map(t => t.dataset.url)
+    // Lấy URL từ thuộc tính data-url của các thẻ thumbnail targets
+    this.images = this.thumbnailTargets.map(t => t.dataset.url).filter(url => url !== undefined)
+    console.log("Tổng số ảnh lấy được:", this.images.length)
   }
 
-  // Click vào thumbnail
   selectImage(event) {
     const url = event.currentTarget.dataset.url
     this.currentIndex = this.images.indexOf(url)
     this._updateDisplay()
   }
 
-  // Nút Next
+  goToDot(event) {
+    const targetIndex = parseInt(event.currentTarget.dataset.targetIndex)
+    if (!isNaN(targetIndex)) {
+      this.currentIndex = targetIndex
+      this._updateDisplay()
+    }
+  }
+
   next() {
+    if (this.images.length <= 1) return
     this.currentIndex = (this.currentIndex + 1) % this.images.length
     this._updateDisplay()
   }
 
-  // Nút Previous
   previous() {
+    if (this.images.length <= 1) return
     this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length
     this._updateDisplay()
   }
 
-  // --- LOGIC CHO SWIPE TRÊN MOBILE ---
-  
+  // --- SWIPE LOGIC ---
   touchStart(event) {
     this.touchStartX = event.changedTouches[0].screenX
   }
 
   touchEnd(event) {
     this.touchEndX = event.changedTouches[0].screenX
-    this._handleGesture()
-  }
-
-  _handleGesture() {
-    const threshold = 50 // Khoảng cách tối thiểu để tính là một cú vuốt
-    if (this.touchEndX < this.touchStartX - threshold) {
-      // Vuốt sang trái -> Xem ảnh tiếp theo
-      this.next()
-    }
-    if (this.touchEndX > this.touchStartX + threshold) {
-      // Vuốt sang phải -> Xem ảnh trước đó
-      this.previous()
-    }
-  }
-
-  // --- THAY ĐỔI VARIANT ---
-
-  switchVariant(event) {
-    const newImages = JSON.parse(event.currentTarget.dataset.images)
-    this.priceTarget.innerText = event.currentTarget.dataset.price
-
-    // Cập nhật lại toàn bộ thumbnail trong DOM (cả PC và Mobile)
-    const containers = document.querySelectorAll('[data-product-gallery-target="variantGallery"]')
-    containers.forEach(container => {
-      container.innerHTML = newImages.map((url, index) => `
-        <div class="flex-shrink-0 w-20 h-20 lg:w-full aspect-square rounded border-2 ${index === 0 ? 'border-blue-600' : 'border-transparent'} cursor-pointer overflow-hidden bg-gray-50"
-             data-product-gallery-target="thumbnail"
-             data-action="click->product-gallery#selectImage"
-             data-url="${url}">
-          <img src="${url}" class="w-full h-full object-contain p-1">
-        </div>
-      `).join('')
-    })
-
-    this.refreshImageList()
-    this.currentIndex = 0
-    this._updateDisplay()
+    const threshold = 50
+    if (this.touchEndX < this.touchStartX - threshold) this.next()
+    if (this.touchEndX > this.touchStartX + threshold) this.previous()
   }
 
   _updateDisplay() {
-    const currentUrl = this.images[this.currentIndex]
+    if (!this.images || this.images.length === 0) {
+      // Nếu chưa có list ảnh, thử lấy lại lần nữa
+      this.refreshImageList();
+    }
+    
+    if (this.images.length === 0) return;
+  
+    const currentUrl = this.images[this.currentIndex];
     
     // 1. Cập nhật ảnh chính
-    if (this.hasMainImageTarget) {
-      this.mainImageTarget.src = currentUrl
+    if (this.hasMainImageTarget && currentUrl) {
+      this.mainImageTarget.src = currentUrl;
     }
   
-    // 2. Cập nhật Highlight cho TẤT CẢ thumbnail (Cả bản PC và Mobile)
+    // 2. Cập nhật Thumbnails (giữ nguyên logic của bạn)
     this.thumbnailTargets.forEach((t) => {
-      // Kiểm tra xem thumbnail này có trùng URL với ảnh đang hiển thị không
-      if (t.dataset.url === currentUrl) {
-        // TRẠNG THÁI ACTIVE
-        t.classList.add('border-blue-600', 'ring-1', 'ring-blue-600', 'opacity-100')
-        t.classList.remove('border-transparent', 'opacity-60')
-        
-        // Chỉ cuộn thumbnail vào vùng nhìn thấy nếu nó đang hiển thị (không bị hidden)
-        if (t.offsetWidth > 0 || t.offsetHeight > 0) {
-          t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' })
+      const isActive = t.dataset.url === currentUrl;
+      t.classList.toggle('border-blue-600', isActive);
+      t.classList.toggle('ring-1', isActive);
+      t.classList.toggle('ring-blue-600', isActive);
+      t.classList.toggle('opacity-100', isActive);
+      t.classList.toggle('border-transparent', !isActive);
+      t.classList.toggle('opacity-60', !isActive);
+      
+      if (isActive) {
+        t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    });
+  
+    // 3. Quan trọng: Luôn gọi render dots ở đây
+    this._renderDots();
+  }
+
+  _renderDots() {
+    const total = this.images.length
+    const current = this.currentIndex
+  
+    // Tính toán cửa sổ 5 dot
+    let start = current - 2
+    if (start < 0) start = 0
+    if (start + 5 > total) start = Math.max(0, total - 5)
+  
+    this.dotTargets.forEach((dot, i) => {
+      const imageIndex = start + i
+  
+      if (imageIndex < total) {
+        // Gán lại toàn bộ class dựa trên trạng thái active/inactive
+        // Cách này sẽ xóa sạch class "hidden" cũ nếu có
+        if (imageIndex === current) {
+          dot.className = "h-2 w-4 bg-blue-600 rounded-full shadow-sm transition-all duration-300"
+        } else {
+          dot.className = "h-2 w-2 bg-white/60 rounded-full shadow-sm transition-all duration-300"
         }
+        
+        dot.dataset.targetIndex = imageIndex
       } else {
-        // TRẠNG THÁI ĐỢI
-        t.classList.remove('border-blue-600', 'ring-1', 'ring-blue-600', 'opacity-100')
-        t.classList.add('border-transparent', 'opacity-60') // Để hơi mờ nhẹ để phân biệt, hoặc xóa opacity-60 nếu muốn rõ 100%
+        // Chỉ những dot thừa (ngoài phạm vi ảnh) mới bị ẩn
+        dot.className = "hidden"
       }
     })
   }

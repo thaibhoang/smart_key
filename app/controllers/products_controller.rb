@@ -5,7 +5,20 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find(params[:id])
-    @variants = @product.variants.with_attached_images
+    @product = Product.includes(variants: { images_attachments: :blob }, specifications: {}).find(params[:id])
+
+    # Lấy variant đầu tiên làm mặc định hoặc theo params
+    @selected_variant =
+      if params[:variant_id].present?
+        @product.variants.find_by(id: params[:variant_id]) || @product.variants.first
+      else
+        @product.variants.first
+      end
+
+    @specifications = @product.specifications
+
+    @related_products = Product.where(category_id: @product.category_id)
+                               .where.not(id: @product.id)
+                               .limit(4)
   end
 end
