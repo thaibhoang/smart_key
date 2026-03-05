@@ -1,117 +1,167 @@
-<div class="bg-white min-h-screen" data-controller="product-gallery"> 
-  <nav class="hidden lg:block max-w-7xl mx-auto px-8 py-4 text-xs text-gray-400 uppercase tracking-widest">
-    <%= link_to "Home", root_path %> > <span class="text-gray-900"><%= @product.name %></span>
-  </nav>
-  <div class="max-w-7xl mx-auto lg:px-8 py-4 lg:py-10">
-    <div class="lg:grid lg:grid-cols-12 lg:gap-x-12">
-      
-      <div class="lg:col-span-7 flex flex-col lg:flex-row gap-4">
-        
-        <div class="hidden lg:flex flex-col gap-3 w-20 flex-shrink-0 max-h-[550px] overflow-y-auto scrollbar-hide" 
-             data-product-gallery-target="variantGallery">
-          <% @product.variants.first.images.each_with_index do |img, idx| %>
-            <div class="w-full aspect-square rounded border-2 <%= idx == 0 ? 'border-blue-600' : 'border-transparent' %> cursor-pointer overflow-hidden bg-gray-50 transition-all"
-                 data-product-gallery-target="thumbnail"
-                 data-action="click->product-gallery#selectImage"
-                 data-url="<%= url_for(img) %>">
-              <%= image_tag img, class: "w-full h-full object-contain p-1" %>
+<%# Khai báo dữ liệu hình ảnh %>
+<% images = @selected_variant&.images || [] %>
+<% image_urls = images.map { |img| url_for(img.variant(:standard)) } %>
+<% thumb_urls = images.map { |img| url_for(img.variant(:thumb)) } %>
+
+<%# Tăng max-w lên để hiển thị đẹp trên PC rộng %>
+<main class="max-w-7xl mx-auto py-10 lg:py-20" data-controller="product-gallery">
+  
+  <%# WRAPPER CHO PHẦN TRÊN: CHIA 2 CỘT TRÊN PC %>
+  <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start px-4">
+    
+    <%# CỘT TRÁI: GALLERY %>
+    <div class="product-gallery-wrapper">
+      <%# SECTION 1: ẢNH CHÍNH %>
+      <section class="relative bg-gray-100 dark:bg-gray-800 rounded-2xl overflow-hidden">
+        <div class="aspect-[4/5] sm:aspect-square w-full relative group"
+             data-action="touchstart->product-gallery#touchStart touchend->product-gallery#touchEnd">
+          
+          <img data-product-gallery-target="mainImage"
+               alt="<%= @product.name %>"
+               class="w-full h-full object-cover transition-opacity duration-300"
+               src="<%= image_urls.first || image_path('placeholder.png') %>" />
+
+          <% if image_urls.size > 1 %>
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center items-center space-x-2">
+              <% 5.times do %>
+                <button data-product-gallery-target="dot" 
+                        data-action="click->product-gallery#goToDot" 
+                        class="h-2 w-2 bg-white/60 rounded-full shadow-sm transition-all duration-300 hidden">
+                </button>
+              <% end %>
             </div>
           <% end %>
         </div>
+      </section>
 
-        <div class="relative flex-1 group bg-gray-50 overflow-hidden lg:rounded-xl aspect-square lg:aspect-[4/5]"
-          data-action="touchstart->product-gallery#touchStart touchend->product-gallery#touchEnd">
-          <img data-product-gallery-target="mainImage" 
-               src="<%= url_for(@product.variants.first.images.first) %>" 
-               class="w-full h-full object-contain p-4 lg:p-10 transition-opacity duration-300">
-          
-          <div class="absolute inset-0 flex items-center justify-between px-2 lg:px-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button data-action="click->product-gallery#previous" class="p-2 lg:p-3 rounded-full bg-white/80 backdrop-blur shadow-md hover:bg-white transition text-gray-900">
-              <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-width="2"/></svg>
-            </button>
-            <button data-action="click->product-gallery#next" class="p-2 lg:p-3 rounded-full bg-white/80 backdrop-blur shadow-md hover:bg-white transition text-gray-900">
-              <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="lg:hidden px-4 mt-4 flex gap-3 overflow-x-auto pb-2 snap-x scrollbar-hide" 
-             data-product-gallery-target="variantGallery">
-          <% @product.variants.first.images.each_with_index do |img, idx| %>
-            <div class="flex-shrink-0 w-20 h-20 lg:w-full aspect-square rounded-lg border-2 border-transparent cursor-pointer overflow-hidden bg-gray-50 transition-all duration-200 shadow-sm"
-                data-product-gallery-target="thumbnail"
-                data-action="click->product-gallery#selectImage"
-                data-url="<%= url_for(img) %>">
-              <%= image_tag img, class: "w-full h-full object-contain p-1" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <div class="lg:col-span-5 px-4 lg:px-0 mt-8 lg:mt-0 lg:sticky lg:top-10">
-        <div class="border-b border-gray-100 pb-6">
-          <p class="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em] mb-2"><%= @product.brand %></p>
-          <h1 class="text-3xl font-serif text-gray-900 leading-tight"><%= @product.name %></h1>
-          
-          <div class="mt-6">
-            <span data-product-gallery-target="price" class="text-2xl font-light text-gray-900">
-              <%= number_to_currency(@product.variants.first.price, unit: "₫", precision: 0, format: "%n %u") %>
-            </span>
-          </div>
-        </div>
-
-        <div class="mt-8">
-          <h3 class="text-xs font-bold text-gray-900 uppercase tracking-widest mb-4">Chọn phiên bản:</h3>
-          <div class="grid grid-cols-2 gap-2">
-            <% @product.variants.each do |v| %>
-              <button class="py-3 border border-gray-200 text-sm hover:border-blue-600 transition"
-                data-action="click->product-gallery#switchVariant"
-                data-price="<%= number_to_currency(v.price, unit: "₫", precision: 0, format: "%n %u") %>"
-                data-images="<%= v.images.map { |img| url_for(img) }.to_json %>">
-                <%= v.color %>
+      <%# SECTION 2: THUMBNAILS %>
+      <% if image_urls.present? %>
+        <section class="py-4 overflow-x-auto no-scrollbar scroll-smooth">
+          <div class="flex space-x-3 min-w-max">
+            <% image_urls.each_with_index do |img_url, index| %>
+              <button data-product-gallery-target="thumbnail"
+                      data-action="click->product-gallery#selectImage"
+                      data-url="<%= img_url %>"
+                      class="w-16 h-16 lg:w-20 lg:h-20 rounded-lg overflow-hidden bg-surface-light dark:bg-surface-dark border transition-all duration-200 hover:border-blue-500">
+                <img alt="thumb" class="w-full h-full object-cover pointer-events-none" src="<%= thumb_urls[index] %>"/>
               </button>
             <% end %>
           </div>
-        </div>
+        </section>
+      <% end %>
+    </div>
 
-        <div class="mt-10">
-          <button class="w-full bg-[#B22234] text-white py-4 font-bold text-xs uppercase tracking-widest hover:bg-black transition-all">
-            THÊM VÀO GIỎ HÀNG
-          </button>
+    <%# CỘT PHẢI: THÔNG TIN SƠ LƯỢC %>
+    <section class="py-2 lg:py-0">
+      <span class="text-blue-600 dark:text-blue-400 text-xs font-bold tracking-wider uppercase">
+        <%= @product.brand.presence || @product.category&.name %>
+      </span>
+      <h2 class="text-3xl lg:text-4xl font-bold mt-1 text-gray-900 dark:text-white"><%= @product.name %></h2>
+
+      <div class="flex items-center justify-between mt-4">
+        <div class="flex items-baseline space-x-3">
+          <span class="text-3xl font-bold text-gray-900 dark:text-white">
+            <%= number_to_currency(@selected_variant&.price, unit: "₫", precision: 0, format: "%n%u") %>
+          </span>
+          <span class="text-lg text-gray-400 line-through decoration-1">
+            <%= number_to_currency(@selected_variant&.price, unit: "₫", precision: 0, format: "%n%u") %>
+          </span>
         </div>
       </div>
 
-    </div>
+      <%# VARIANT SELECTION %>
+      <% if @product.variants.any? %>
+        <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+          <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+            Phiên bản: <span class="text-blue-600 font-bold" data-product-gallery-target="variantName"><%= @selected_variant&.color %></span>
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <% @product.variants.each do |variant| %>
+              <% is_active = (variant == @selected_variant) %>
+              <%= link_to product_path(@product, variant_id: variant.id),
+                  class: "px-5 py-2.5 rounded-full text-sm font-medium border transition-all #{is_active ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-blue-400'}" do %>
+                <%= variant.color %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
 
-    <div class="mt-24 border-t border-gray-100 pt-16 grid lg:grid-cols-3 gap-16 px-4 lg:px-0">
-      <div class="lg:col-span-2">
-        <h2 class="text-2xl font-serif mb-8 italic">Product Details</h2>
-        <div class="prose prose-neutral max-w-none text-gray-600">
+      <%# RICH TEXT: MAIN FEATURES %>
+      <% if @product.main_features.present? %>
+        <div class="mt-12">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Tính năng nổi bật</h3>
+          <div class="prose prose-base dark:prose-invert max-w-none">
+            <%= @product.main_features %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Nút mua hàng (Gợi ý thêm để tối ưu layout PC) %>
+      <div class="mt-8">
+        <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-[0.98]">
+          LIÊN HỆ NGƯỜI BÁN
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <%# CÁC PHẦN DƯỚI ĐÂY VẪN CHIẾM FULL WIDTH %>
+  <div class="max-w-4xl mx-auto lg:mx-0 lg:max-w-none px-4">
+    
+
+    <%# SECTION 4: DETAILS & SPECS %>
+    <% if @product.details.present? %>
+      <hr class="my-12 border-gray-200 dark:border-gray-700"/>
+      <section>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Mô tả chi tiết</h3>
+        <div class="prose prose-base dark:prose-invert max-w-none">
           <%= @product.details %>
         </div>
-      </div>
-      <div>
-        <h2 class="text-xs font-bold uppercase tracking-widest mb-8">Specifications</h2>
-        <dl class="space-y-4">
-          <% @product.specifications.order(:position).each do |spec| %>
-            <div class="flex justify-between border-b border-gray-50 pb-2">
-              <dt class="text-xs text-gray-400 uppercase"><%= spec.name %></dt>
-              <dd class="text-xs text-gray-900 font-bold"><%= spec.content %></dd>
+      </section>
+    <% end %>
+
+    <% if @specifications.any? %>
+      <section class="mb-12 mt-12">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Thông số kỹ thuật</h3>
+        <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden text-sm lg:text-base">
+          <% @specifications.each_with_index do |spec, index| %>
+            <div class="grid grid-cols-3 border-b border-gray-200 dark:border-gray-700 p-5 <%= 'bg-gray-50 dark:bg-gray-800/50' if index.odd? %> last:border-0">
+              <div class="text-gray-500 dark:text-gray-400 font-medium"><%= spec.name %></div>
+              <div class="col-span-2 font-medium text-gray-900 dark:text-white text-right sm:text-left"><%= spec.content %></div>
             </div>
           <% end %>
-        </dl>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
+      </section>
+    <% end %>
 
-<style>
-  /* Clean Scrollbar */
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-  
-  /* Typography for Rich Text */
-  .prose ul { list-style-type: none; padding-left: 0; }
-  .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-  .prose li::before { content: "•"; position: absolute; left: 0; color: #ccc; }
-</style>
+    <%# SECTION 5: RELATED PRODUCTS - ĐÃ CHỈNH LÊN 4 CỘT TRÊN PC %>
+    <% if @related_products.any? %>
+      <section class="mb-12">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white">Sản phẩm liên quan</h3>
+          <%= link_to "Xem tất cả", products_path, class: "text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline" %>
+        </div>
+        <%# Grid thay đổi từ 2 lên 4 cột khi đạt breakpoint lg %>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <% @related_products.each do |product| %>
+            <% rel_variant = product.variants.first %>
+            <%= link_to product_path(product), class: "bg-surface-light dark:bg-surface-dark rounded-2xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all block" do %>
+              <div class="relative bg-gray-100 dark:bg-gray-800 rounded-xl aspect-square mb-4 overflow-hidden flex items-center justify-center">
+                <% if rel_variant&.images&.attached? %>
+                  <%= image_tag rel_variant.images.first.variant(:thumb), class: "w-full h-full object-cover" %>
+                <% else %>
+                  <img src="<%= image_path('placeholder.png') %>" class="w-2/4 opacity-20" />
+                <% end %>
+              </div>
+              <h4 class="font-bold text-sm lg:text-base truncate text-gray-900 dark:text-white"><%= product.name %></h4>
+              <div class="text-blue-600 dark:text-blue-400 font-extrabold text-base mt-2">
+                <%= number_to_currency(rel_variant&.price, unit: "₫", precision: 0) %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  </div>
+</main>
