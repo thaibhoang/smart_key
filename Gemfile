@@ -72,3 +72,5 @@ group :test do
 end
 
 gem "dotenv", "~> 3.2"
+
+gem "pagy", "~> 9.1"

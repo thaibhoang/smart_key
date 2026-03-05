@@ -1,53 +1,153 @@
-<div class="bg-gray-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-extrabold text-gray-900 mb-8 border-l-4 border-blue-600 pl-4">
-      Danh sách Khóa Thông Minh
+<%# Header Section - Chỉ giữ lại Brand Logo %>
+<header class="sticky top-0 z-50 bg-white/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-start items-center h-16">
+      <div class="flex-shrink-0 flex items-center">
+        <%= link_to root_path, class: "text-2xl font-bold tracking-widest text-primary dark:text-white uppercase" do %>
+          ZATOS
+        <% end %>
+      </div>
+    </div>
+  </div>
+</header>
+
+<%# Hero Section %>
+<section class="relative bg-gray-900 overflow-hidden">
+  <div class="absolute inset-0 z-0 opacity-40">
+    <%# Sử dụng ảnh nền từ thiết kế cũ %>
+    <img alt="Dark modern home background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnBiI-eV4ckD0fwYJSu5K64OZFfF4cMyaLCvcsnQisvUQe2syZDEot9GaZlt2LxM0q56Y-xPeffMvch95DxRf9YSSwYr0XobSEVBQX2Xf-rpedyQWd98HYHQmSkEyDjGFTN95ugLWynX-FFGsQkJBXcWtUBB9JYYxA8AcoihsPk_2sffsPCbE_7B9YUkekDlkCaHsslzhqWdWQtNhPN29s7aSUn1qGvZtrXPNc6hyiwCmdaLRG-y139q9tZ2K89a5iWazVtFUwD7A"/>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-slate-900/60 to-slate-900"></div>
+  </div>
+  
+  <div class="relative z-10 max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+    <div class="inline-block px-4 py-1.5 mb-6 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm text-xs font-medium tracking-wide text-white uppercase">
+      Sản phẩm mới
+    </div>  
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">
+      An Ninh <span class="text-secondary" style="color: #D4AF37;">Đẳng Cấp</span>
     </h1>
+    <p class="max-w-xl mx-auto text-lg sm:text-xl text-gray-300 mb-6 leading-relaxed">
+      Trải nghiệm đỉnh cao bảo mật ngôi nhà thông minh với dòng sản phẩm mới.
+    </p>
+    <button class="cursor-pointer bg-white text-primary hover:bg-gray-100 font-semibold py-3.5 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105 active:scale-95">
+      Khám Phá Bộ Sưu Tập
+    </button>
+  </div>
+</section>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-      <% @products.each do |product| %>
-        <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 group">
-          
-          <%# Phần hình ảnh - Lấy ảnh của variant đầu tiên %>
-          <div class="relative h-64 bg-gray-200 overflow-hidden">
-            <% if product.variants.any? && product.variants.first.images.attached? %>
-              <%= image_tag product.variants.first.images.first, 
-                  class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" %>
-            <% else %>
-              <div class="flex items-center justify-center h-full text-gray-400 italic">No Image</div>
-            <% end %>
-            
-            <%# Badge danh mục %>
-            <span class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-blue-600 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-              <%= product.category&.name %>
-            </span>
-          </div>
+<%# Search & Filter Section %>
+<section class="pt-8 pb-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <%# Ô tìm kiếm %>
+  <%= form_with(url: products_path, method: :get, class: "relative mb-6") do |f| %>
+    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <span class="material-icons-round text-gray-400">search</span>
+    </div>
+    <%= f.text_field :search, 
+        value: params[:search],
+        placeholder: "Tìm kiếm sản phẩm...", 
+        class: "block w-full pl-10 pr-3 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-surface-dark focus:ring-1 focus:ring-primary dark:focus:ring-secondary focus:border-primary text-gray-900 dark:text-white shadow-sm" 
+    %>
+  <% end %>
 
-          <%# Thông tin sản phẩm %>
-          <div class="p-5">
-            <p class="text-xs text-gray-400 uppercase tracking-widest mb-1"><%= product.brand %></p>
-            <h2 class="text-xl font-bold text-gray-800 mb-2 truncate">
-              <%= link_to product.name, product_path(product), class: "hover:text-blue-600" %>
-            </h2>
-            
-            <div class="flex items-center justify-between mt-4">
-              <div>
-                <span class="text-sm text-gray-500 block">Giá từ:</span>
-                <span class="text-xl font-black text-red-600">
-                  <%= number_to_currency(product.variants.minimum(:price)) %>
-                </span>
-              </div>
-              
-              <%= link_to product_path(product), 
-                  class: "bg-gray-900 text-white p-3 rounded-xl hover:bg-blue-600 transition-colors" do %>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              <% end %>
-            </div>
-          </div>
-        </div>
+  <%# Category Tabs %>
+  <div class="flex space-x-3 overflow-x-auto hide-scrollbar pb-2">
+    <%= link_to "Tất cả", products_path, 
+        class: "flex-shrink-0 px-6 py-2 rounded-full #{params[:category].blank? ? 'bg-gray-800 text-white shadow-md' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'} text-sm font-medium transition-colors" %>
+    
+    <% @categories.each do |category| %>
+      <%= link_to category.name, products_path(category: category.id), 
+          class: "flex-shrink-0 px-6 py-2 rounded-full #{params[:category].to_i == category.id ? 'bg-gray-800 text-white shadow-md' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'} text-sm font-medium transition-colors" %>
+    <% end %>
+  </div>
+</section>
+
+<%# Danh sách sản phẩm Header %>
+<section class="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Danh sách sản phẩm</h2>
+    
+    <%# Bộ lọc sắp xếp %>
+    <div class="flex items-center space-x-2">
+      <span class="text-sm text-gray-500">Sắp xếp:</span>
+      <%= form_with(url: products_path, method: :get, class: "inline-block") do |f| %>
+        <%= f.select :sort, 
+            options_for_select([
+              ['Sản phẩm mới nhất', 'newest'],
+              ['Giá: Thấp đến Cao', 'price_asc'],
+              ['Giá: Cao đến Thấp', 'price_desc']
+            ], params[:sort]), 
+            {}, 
+            { onchange: 'this.form.submit();', class: "bg-transparent border-none text-sm font-semibold text-primary dark:text-white focus:ring-0 cursor-pointer" } 
+        %>
       <% end %>
     </div>
   </div>
+
+  <%# Grid sản phẩm %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <% @products.each do |product| %>
+      <% 
+        # Logic lấy variant đầu tiên và ảnh chính
+        first_variant = product.variants.first
+        main_image = first_variant&.images&.first
+        display_price = first_variant&.price || 0
+      %>
+      
+      <div class="group bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 dark:border-gray-800 flex flex-col">
+        <div class="relative bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 mb-4 flex items-center justify-center h-64 overflow-hidden">
+          <% if main_image.present? %>
+            <%= image_tag main_image, alt: product.name, class: "h-40 w-auto object-contain drop-shadow-xl transform group-hover:scale-105 transition-transform duration-300" %>
+          <% else %>
+            <div class="text-gray-300 italic text-sm text-center">Chưa có ảnh</div>
+          <% end %>
+          
+          <button class="absolute top-3 right-3 p-1.5 bg-white/80 dark:bg-black/20 rounded-full text-gray-400 hover:text-red-500 transition-colors">
+            <span class="material-icons-round text-lg">favorite_border</span>
+          </button>
+        </div>
+
+        <div class="flex-grow">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1"><%= product.name %></h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2"><%= product.description %></p>
+          
+          <div class="flex items-center space-x-2 mb-4">
+            <span class="text-lg font-bold text-secondary" style="color: #D4AF37;">
+              <%= number_to_currency(display_price, unit: "₫", precision: 0, format: "%n%u") %>
+            </span>
+            <%# Hiện tại dùng chung giá cho phần khuyến mãi theo yêu cầu %>
+            <span class="text-sm text-gray-400 line-through">
+               <%= number_to_currency(display_price * 1.2, unit: "₫", precision: 0, format: "%n%u") %>
+            </span>
+          </div>
+        </div>
+
+        <%= link_to product_path(product), class: "w-full bg-primary text-white text-center text-sm font-semibold py-3 rounded-lg hover:bg-gray-800 transition-colors" do %>
+          Xem chi tiết
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Phân trang %>
+  <div class="mt-12 flex justify-center">
+    <% if @pagy.present? %>
+      <%== pagy_nav(@pagy) %>
+    <% end %>
+  </div>
+</section>
+
+<%# Zalo & Call Buttons (Floating) %>
+<div class="fixed bottom-6 right-4 flex flex-col space-y-3 z-40">
+  <a href="https://zalo.me/your_number" class="bg-[#0068FF] hover:bg-blue-600 text-white w-14 h-14 rounded-full shadow-lg flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95">
+    <span class="text-[10px] font-bold leading-none">Zalo</span>
+  </a>
+  <a href="tel:your_number" class="bg-[#25D366] hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95">
+    <span class="material-icons-round text-2xl leading-none mb-0.5">call</span>
+    <span class="text-[8px] font-bold leading-none uppercase">Gọi ngay</span>
+  </a>
 </div>
+
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
