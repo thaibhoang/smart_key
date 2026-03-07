@@ -1,0 +1,39 @@
+<%# app/views/shared/_pagy_nav.html.erb %>
+<nav class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-0 mt-6" aria-label="Pagination">
+  
+  <div class="flex flex-1 justify-between sm:hidden">
+    <%= link_to_if pagy.prev, "Previous", pagy_url_for(pagy, pagy.prev), 
+        class: "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" do %>
+      <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Previous</span>
+    <% end %>
+
+    <%= link_to_if pagy.next, "Next", pagy_url_for(pagy, pagy.next), 
+        class: "relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" do %>
+      <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Next</span>
+    <% end %>
+  </div>
+
+  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
+    <div>
+      <nav class="isolate inline-flex gap-2 -space-x-px" aria-label="Pagination">
+        <% pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <%# Các trang bình thường %>
+            <%= link_to item, pagy_url_for(pagy, item), 
+                class: "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0" %>
+          
+          <% elsif item.is_a?(String) %>
+            <%# Trang hiện tại %>
+            <span aria-current="page" class="relative z-10 inline-flex items-center bg-gray-700 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-700">
+              <%= item %>
+            </span>
+
+          <% elsif item == :gap %>
+            <%# Dấu ba chấm (...) %>
+            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300">...</span>
+          <% end %>
+        <% end %>
+      </nav>
+    </div>
+  </div>
+</nav>

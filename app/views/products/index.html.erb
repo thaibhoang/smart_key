@@ -1,15 +1,4 @@
-<%# Header Section - Chỉ giữ lại Brand Logo %>
-<header class="sticky top-0 z-50 bg-white/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-start items-center h-16">
-      <div class="flex-shrink-0 flex items-center">
-        <%= link_to root_path, class: "text-2xl font-bold tracking-widest text-primary dark:text-white uppercase" do %>
-          ZATOS
-        <% end %>
-      </div>
-    </div>
-  </div>
-</header>
+<%= render 'shared/header', products: true %>
 
 <%# Hero Section %>
 <section class="relative bg-gray-900 overflow-hidden">
@@ -40,7 +29,7 @@
   <%# Ô tìm kiếm %>
   <%= form_with(url: products_path, method: :get, class: "relative mb-6") do |f| %>
     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-      <span class="material-icons-round text-gray-400">search</span>
+      <span class="material-symbols-outlined text-gray-400">search</span>
     </div>
     <%= f.text_field :search, 
         value: params[:search],
@@ -61,91 +50,84 @@
   </div>
 </section>
 
-<%# Danh sách sản phẩm Header %>
-<section class="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Danh sách sản phẩm</h2>
-    
-    <%# Bộ lọc sắp xếp %>
-    <div class="flex items-center space-x-2">
-      <span class="text-sm text-gray-500">Sắp xếp:</span>
-      <%= form_with(url: products_path, method: :get, class: "inline-block") do |f| %>
-        <%= f.select :sort, 
-            options_for_select([
-              ['Sản phẩm mới nhất', 'newest'],
-              ['Giá: Thấp đến Cao', 'price_asc'],
-              ['Giá: Cao đến Thấp', 'price_desc']
-            ], params[:sort]), 
-            {}, 
-            { onchange: 'this.form.submit();', class: "bg-transparent border-none text-sm font-semibold text-primary dark:text-white focus:ring-0 cursor-pointer" } 
-        %>
-      <% end %>
-    </div>
-  </div>
+<%# turbo frame for products %>
+<%= turbo_frame_tag "products" do %>
 
-  <%# Grid sản phẩm %>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    <% @products.each do |product| %>
-      <% 
-        # Logic lấy variant đầu tiên và ảnh chính
-        first_variant = product.variants.first
-        main_image = first_variant&.images&.first
-        display_price = first_variant&.price || 0
-      %>
+  <%# Danh sách sản phẩm Header %>
+  <section class="py-4 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Danh sách sản phẩm</h2>
       
-      <div class="group bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 dark:border-gray-800 flex flex-col">
-        <div class="relative bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 mb-4 flex items-center justify-center h-64 overflow-hidden">
-          <% if main_image.present? %>
-            <%= image_tag main_image, alt: product.name, class: "h-40 w-auto object-contain drop-shadow-xl transform group-hover:scale-105 transition-transform duration-300" %>
-          <% else %>
-            <div class="text-gray-300 italic text-sm text-center">Chưa có ảnh</div>
-          <% end %>
-          
-          <button class="absolute top-3 right-3 p-1.5 bg-white/80 dark:bg-black/20 rounded-full text-gray-400 hover:text-red-500 transition-colors">
-            <span class="material-icons-round text-lg">favorite_border</span>
-          </button>
-        </div>
-
-        <div class="flex-grow">
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1"><%= product.name %></h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2"><%= product.description %></p>
-          
-          <div class="flex items-center space-x-2 mb-4">
-            <span class="text-lg font-bold text-secondary" style="color: #D4AF37;">
-              <%= number_to_currency(display_price, unit: "₫", precision: 0, format: "%n%u") %>
-            </span>
-            <%# Hiện tại dùng chung giá cho phần khuyến mãi theo yêu cầu %>
-            <span class="text-sm text-gray-400 line-through">
-               <%= number_to_currency(display_price * 1.2, unit: "₫", precision: 0, format: "%n%u") %>
-            </span>
-          </div>
-        </div>
-
-        <%= link_to product_path(product), class: "w-full bg-primary text-white text-center text-sm font-semibold py-3 rounded-lg hover:bg-gray-800 transition-colors" do %>
-          Xem chi tiết
+      <%# Bộ lọc sắp xếp %>
+      <div class="flex items-center space-x-2">
+        <span class="text-sm text-gray-500">Sắp xếp:</span>
+        <%= form_with(url: products_path, method: :get, class: "inline-block") do |f| %>
+          <%= f.select :sort, 
+              options_for_select([
+                ['Sản phẩm mới nhất', 'newest'],
+                ['Giá: Thấp đến Cao', 'price_asc'],
+                ['Giá: Cao đến Thấp', 'price_desc']
+              ], params[:sort]), 
+              {}, 
+              { onchange: 'this.form.submit();', class: "bg-transparent border-none text-sm font-semibold text-primary dark:text-white focus:ring-0 cursor-pointer" } 
+          %>
         <% end %>
       </div>
-    <% end %>
-  </div>
+    </div>
 
-  <%# Phân trang %>
-  <div class="mt-12 flex justify-center">
-    <% if @pagy.present? %>
-      <%== pagy_nav(@pagy) %>
-    <% end %>
-  </div>
-</section>
+    <%# Grid sản phẩm %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <% @products.each do |product| %>
+        <% 
+          # Logic lấy variant đầu tiên và ảnh chính
+          first_variant = product.variants.first
+          main_image = first_variant&.images&.first
+          display_price = first_variant&.price || 0
+        %>
+        
+        <div class="group bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 dark:border-gray-800 flex flex-col">
+          <div class="relative rounded-xl mb-4 flex items-center justify-center h-64 overflow-hidden">
+            <% if main_image.present? %>
+              <%= image_tag main_image, alt: product.name, class: "h-full w-auto object-contain transform group-hover:scale-105 transition-transform duration-300" %>
+            <% else %>
+              <div class="text-gray-300 italic text-sm text-center">Chưa có ảnh</div>
+            <% end %>
+          </div>
 
-<%# Zalo & Call Buttons (Floating) %>
-<div class="fixed bottom-6 right-4 flex flex-col space-y-3 z-40">
-  <a href="https://zalo.me/your_number" class="bg-[#0068FF] hover:bg-blue-600 text-white w-14 h-14 rounded-full shadow-lg flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95">
-    <span class="text-[10px] font-bold leading-none">Zalo</span>
-  </a>
-  <a href="tel:your_number" class="bg-[#25D366] hover:bg-green-600 text-white w-14 h-14 rounded-full shadow-lg flex flex-col items-center justify-center transition-transform hover:scale-110 active:scale-95">
-    <span class="material-icons-round text-2xl leading-none mb-0.5">call</span>
-    <span class="text-[8px] font-bold leading-none uppercase">Gọi ngay</span>
-  </a>
-</div>
+          <div class="flex-grow">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1 line-clamp-1"><%= product.name %></h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
+              <%= product.description %>
+            </p>            
+            <div class="flex items-center space-x-2 mb-4">
+              <span class="text-lg font-bold text-secondary" style="color: #D4AF37;">
+                <%= number_to_currency(display_price, unit: "₫", precision: 0, format: "%n%u") %>
+              </span>
+              <%# Hiện tại dùng chung giá cho phần khuyến mãi theo yêu cầu %>
+              <span class="text-sm text-gray-400 line-through">
+                <%= number_to_currency(display_price * 1.2, unit: "₫", precision: 0, format: "%n%u") %>
+              </span>
+            </div>
+          </div>
+
+          <%= link_to product_path(product), target: "_top", class: "w-full bg-primary/90 text-white text-center text-sm font-semibold py-3 rounded-lg hover:bg-primary transition-colors" do %>
+            Xem chi tiết
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Phân trang %>
+    <div class="container mx-auto">
+      <% if @pagy.present? %>
+        <%= render 'shared/pagy_nav', pagy: @pagy %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<%= render 'shared/contact' %>
+<%= render 'shared/footer' %>
 
 <style>
     .hide-scrollbar::-webkit-scrollbar { display: none; }

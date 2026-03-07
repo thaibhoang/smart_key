@@ -1,6 +1,6 @@
 class Admin::ProductsController < ApplicationController
-  USERNAME = ENV.fetch("ADMIN_USERNAME", "admin_zatos")
-  PASSWORD = ENV.fetch("ADMIN_PASSWORD", "zatos@123.456")
+  USERNAME = ENV.fetch("ADMIN_USERNAME", "admin_parama")
+  PASSWORD = ENV.fetch("ADMIN_PASSWORD", "parama@123.456")
 
   http_basic_authenticate_with name: USERNAME, password: PASSWORD
 

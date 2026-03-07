@@ -46,16 +46,43 @@ export default class extends Controller {
     this._updateDisplay()
   }
 
-  // --- SWIPE LOGIC ---
   touchStart(event) {
-    this.touchStartX = event.changedTouches[0].screenX
+    // Lấy tọa độ bắt đầu
+    this.touchStartX = event.touches[0].clientX;
+    this.touchStartY = event.touches[0].clientY; // Lưu thêm Y để tránh nhầm với cuộn trang
+    this.isSwiping = true;
   }
-
+  
+  touchMove(event) {
+    if (!this.isSwiping) return;
+    // Cập nhật tọa độ khi đang di chuyển
+    this.touchEndX = event.touches[0].clientX;
+  }
+  
   touchEnd(event) {
-    this.touchEndX = event.changedTouches[0].screenX
-    const threshold = 50
-    if (this.touchEndX < this.touchStartX - threshold) this.next()
-    if (this.touchEndX > this.touchStartX + threshold) this.previous()
+    if (!this.isSwiping) return;
+  
+    // QUAN TRỌNG: Dùng changedTouches thay vì touches
+    this.touchEndX = event.changedTouches[0].clientX;
+    const touchEndY = event.changedTouches[0].clientY;
+  
+    const threshold = 50; // Khoảng cách tối thiểu để tính là vuốt
+    const xDistance = this.touchEndX - this.touchStartX;
+    const yDistance = Math.abs(touchEndY - this.touchStartY);
+  
+    // Chỉ chuyển ảnh nếu vuốt ngang mạnh hơn vuốt dọc (tránh nhảy ảnh khi đang cuộn trang)
+    if (Math.abs(xDistance) > threshold && Math.abs(xDistance) > yDistance) {
+      if (xDistance < 0) {
+        this.next();
+      } else {
+        this.previous();
+      }
+    }
+  
+    // Reset
+    this.isSwiping = false;
+    this.touchStartX = 0;
+    this.touchEndX = 0;
   }
 
   _updateDisplay() {
@@ -76,12 +103,11 @@ export default class extends Controller {
     // 2. Cập nhật Thumbnails (giữ nguyên logic của bạn)
     this.thumbnailTargets.forEach((t) => {
       const isActive = t.dataset.url === currentUrl;
-      t.classList.toggle('border-blue-600', isActive);
+      t.classList.toggle('border-primary', isActive);
       t.classList.toggle('ring-1', isActive);
-      t.classList.toggle('ring-blue-600', isActive);
+      t.classList.toggle('ring-primary', isActive);
       t.classList.toggle('opacity-100', isActive);
       t.classList.toggle('border-transparent', !isActive);
-      t.classList.toggle('opacity-60', !isActive);
       
       if (isActive) {
         t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -108,9 +134,9 @@ export default class extends Controller {
         // Gán lại toàn bộ class dựa trên trạng thái active/inactive
         // Cách này sẽ xóa sạch class "hidden" cũ nếu có
         if (imageIndex === current) {
-          dot.className = "h-2 w-4 bg-blue-600 rounded-full shadow-sm transition-all duration-300"
+          dot.className = "h-2 w-4 bg-primary rounded-full shadow-sm transition-all duration-300"
         } else {
-          dot.className = "h-2 w-2 bg-white/60 rounded-full shadow-sm transition-all duration-300"
+          dot.className = "h-2 w-2 bg-gray-200 rounded-full shadow-sm transition-all duration-300"
         }
         
         dot.dataset.targetIndex = imageIndex

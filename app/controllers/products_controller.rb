@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
     # Load Product kèm theo Variants và Ảnh của từng Variant để tránh N+1 query
     @products = Product.includes(variants: { images_attachments: :blob }).all
     @categories = Category.all
-    @products = @products.where("name LIKE ?", "%#{params[:search]}%") if params[:search].present?
+    @products = @products.where("LOWER(name) LIKE ?", "%#{params[:search].downcase}%") if params[:search].present?
 
     # Logic filter theo category
     @products = @products.where(category_id: params[:category]) if params[:category].present?
@@ -11,14 +11,14 @@ class ProductsController < ApplicationController
     # Logic sort
     case params[:sort]
     when 'price_asc'
-      @products = @products.joins(:variants).order('variants.price ASC').distinct
+      @products = @products.joins(:variants).group('products.id').order('MIN(variants.price) ASC')
     when 'price_desc'
-      @products = @products.joins(:variants).order('variants.price DESC').distinct
+      @products = @products.joins(:variants).group('products.id').order('MIN(variants.price) DESC')
     else
       @products = @products.order(created_at: :desc)
     end
 
-    @pagy, @products = pagy(@products, items: 12)
+    @pagy, @products = pagy(@products, limit: 8)
   end
 
   def show

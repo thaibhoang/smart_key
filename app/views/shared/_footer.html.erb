@@ -1,0 +1,71 @@
+<footer class="bg-white dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 mt-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <%# PHẦN 1: SLOGAN %>
+    <div class="py-16 text-center">
+      <h2 class="text-2xl md:text-3xl tracking-[0.3em] font-light text-gray-800 dark:text-gray-100 uppercase mb-3">
+        TRẢI NGHIỆM PRAMA VIỆT NAM
+      </h2>
+      <p class="text-gray-500 dark:text-gray-400 font-light text-sm tracking-wide">
+        An ninh - Đẳng cấp
+      </p>
+    </div>
+
+    <%# PHẦN 2: LOGO CHÍNH %>
+    <div class="flex flex-col items-center mb-16">
+      <div class="flex items-center space-x-2 text-2xl font-bold tracking-[0.2em] text-gray-900 dark:text-white uppercase">
+        <span class="material-symbols-outlined text-secondary !text-3xl">lock</span>
+        <span class="">PRAMA VIỆT NAM</span>
+      </div>
+      <p class="text-secondary font-bold text-[10px] tracking-[0.3em] uppercase mt-2">
+        KHÓA THÔNG MINH CAO CẤP
+      </p>
+    </div>
+
+    <%# PHẦN 3: THÔNG TIN CHI TIẾT (3 CỘT) %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 py-12 border-t border-gray-100 dark:border-gray-800">
+      
+      <%# Địa chỉ %>
+      <div class="flex flex-col items-center text-center">
+        <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-secondary">location_on</span>
+        </div>
+        <h4 class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Địa chỉ</h4>
+        <p class="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          Số 99c ngõ 18, Định Công Thượng, Định Công,<br>TP. Hà Nội
+        </p>
+      </div>
+
+      <%# Đại diện / Người bán %>
+      <div class="flex flex-col items-center text-center">
+        <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-secondary">person</span>
+        </div>
+        <h4 class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Đại diện</h4>
+        <p class="text-sm text-gray-700 dark:text-gray-300">
+          Nguyễn Văn Duân
+        </p>
+      </div>
+
+      <%# Liên hệ %>
+      <div class="flex flex-col items-center text-center" id="contact">
+        <div class="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
+          <span class="material-symbols-outlined text-secondary">call</span>
+        </div>
+        <h4 class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-3">Liên hệ</h4>
+        <a href="tel:0901234567" class="text-sm text-gray-700 dark:text-gray-300 hover:text-secondary transition-colors">
+          096 162 4398
+        </a>
+      </div>
+
+    </div>
+
+    <%# PHẦN 4: BOTTOM BAR %>
+    <div class="border-t border-gray-100 dark:border-gray-800 py-8 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 text-[10px] tracking-[0.15em] text-gray-400 uppercase">
+      <%# Copyright giữa %>
+      <div class="text-center">
+        © <%= Time.current.year %> PRAMA - SMART LUXURY. BẢO LƯU MỌI QUYỀN.
+      </div>
+    </div>
+  </div>
+</footer>
