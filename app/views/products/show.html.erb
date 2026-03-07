@@ -6,7 +6,7 @@
 <% thumb_urls = images.map { |img| url_for(img.variant(:thumb)) } %>
 
 <%# Tăng max-w lên để hiển thị đẹp trên PC rộng %>
-<main class="max-w-7xl mx-auto py-10 lg:py-10" data-controller="product-gallery">
+<main class="max-w-7xl mx-auto pt-10" data-controller="product-gallery">
   
   <%# WRAPPER CHO PHẦN TRÊN: CHIA 2 CỘT TRÊN PC %>
   <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start px-4">
@@ -74,14 +74,25 @@
       </span>
       <h2 class="text-3xl lg:text-4xl font-bold mt-1 text-gray-900 dark:text-white"><%= @product.name %></h2>
 
+      <%
+        price = @selected_variant&.price || 0
+        sale_price = @selected_variant&.sale
+        has_sale = sale_price.to_f > 0 && sale_price < price
+      %>
       <div class="flex items-center justify-between mt-4">
         <div class="flex items-baseline space-x-3">
-          <span class="text-3xl font-bold text-gray-900 dark:text-white">
-            <%= number_to_currency(@selected_variant&.price, unit: "₫", precision: 0, format: "%n%u") %>
-          </span>
-          <span class="text-lg text-gray-400 line-through decoration-1">
-            <%= number_to_currency(@selected_variant&.price, unit: "₫", precision: 0, format: "%n%u") %>
-          </span>
+          <% if has_sale %>
+            <span class="text-3xl font-bold text-gray-900 dark:text-white">
+              <%= number_to_currency(sale_price, unit: "₫", precision: 0, format: "%n %u") %>
+            </span>
+            <span class="text-lg text-gray-400 line-through decoration-1">
+              <%= number_to_currency(price, unit: "₫", precision: 0, format: "%n %u") %>
+            </span>
+          <% else %>
+            <span class="text-3xl font-bold text-gray-900 dark:text-white">
+              <%= number_to_currency(price, unit: "₫", precision: 0, format: "%n %u") %>
+            </span>
+          <% end %>
         </div>
       </div>
 
@@ -95,7 +106,7 @@
             <% @product.variants.each do |variant| %>
               <% is_active = (variant == @selected_variant) %>
               <%= link_to product_path(@product, variant_id: variant.id),
-                  class: "px-5 py-2.5 rounded-full text-sm font-medium transition-all #{is_active ? 'bg-secondary text-white shadow-md' : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:border-gray-400 hover:bg-gray-300'}" do %>
+                  class: "px-5 py-2.5 rounded-full text-sm font-medium transition-all #{is_active ? 'bg-secondary text-white shadow-md hover:bg-secondary/80' : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:border-gray-400 hover:bg-gray-300'}" do %>
                 <%= variant.color %>
               <% end %>
             <% end %>
@@ -132,7 +143,7 @@
       <hr class="my-12 border-gray-200 dark:border-gray-700"/>
       <section>
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Mô tả chi tiết</h3>
-        <div class="prose prose-base dark:prose-invert max-w-none">
+        <div class="prose prose-base dark:prose-invert max-w-none trix-content">
           <%= @product.details %>
         </div>
       </section>
@@ -163,16 +174,27 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <% @related_products.each do |product| %>
             <% 
-              first_variant = product.variants.first
+              # Logic lấy variant đầu tiên và ảnh chính
+              first_variant = product.cheapest_variant
               main_image = first_variant&.images&.first
-              display_price = first_variant&.price || 0
+              price = first_variant&.price || 0
+              sale_price = first_variant&.sale
+              has_sale = sale_price.to_f > 0 && sale_price < price
+              percent = (100 * (1 - sale_price.to_f / price)).to_i
             %>
+            
             <div class="group bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 dark:border-gray-800 flex flex-col">
               <div class="relative rounded-xl mb-4 flex items-center justify-center h-64 overflow-hidden">
                 <% if main_image.present? %>
                   <%= image_tag main_image, alt: product.name, class: "h-full w-auto object-contain transform group-hover:scale-105 transition-transform duration-300" %>
                 <% else %>
                   <div class="text-gray-300 italic text-sm text-center">Chưa có ảnh</div>
+                <% end %>
+
+                <% if has_sale %>
+                  <div class="absolute top-2 left-2 rounded-full bg-secondary px-2 py-1 text-[10px] font-bold text-white uppercase">
+                    - <%= percent %>%
+                  </div>
                 <% end %>
               </div>
 
@@ -182,13 +204,18 @@
                   <%= product.description %>
                 </p>            
                 <div class="flex items-center space-x-2 mb-4">
-                  <span class="text-lg font-bold text-secondary" style="color: #D4AF37;">
-                    <%= number_to_currency(display_price, unit: "₫", precision: 0, format: "%n%u") %>
-                  </span>
-                  <%# Hiện tại dùng chung giá cho phần khuyến mãi theo yêu cầu %>
-                  <span class="text-sm text-gray-400 line-through">
-                    <%= number_to_currency(display_price * 1.2, unit: "₫", precision: 0, format: "%n%u") %>
-                  </span>
+                  <% if has_sale %>
+                    <span class="text-lg font-bold text-secondary">
+                      <%= number_to_currency(sale_price, unit: "₫", precision: 0, format: "%n %u") %>
+                    </span>
+                    <span class="text-sm text-gray-400 line-through">
+                      <%= number_to_currency(price, unit: "₫", precision: 0, format: "%n %u") %>
+                    </span>
+                  <% else %>
+                    <span class="text-lg font-bold text-secondary">
+                      <%= number_to_currency(price, unit: "₫", precision: 0, format: "%n %u") %>
+                    </span>
+                  <% end %>
                 </div>
               </div>
 

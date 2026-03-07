@@ -29,3 +29,14 @@
   padding: 0 !important;
   max-width: 100% !important;
 }
+
+/* Bo góc cho toàn bộ ảnh trong nội dung Rich Text */
+.trix-content action-text-attachment img {
+  border-radius: 1rem; /* Thay đổi độ bo góc tùy ý (ví dụ: 16px) */
+  overflow: hidden;
+}
+
+/* Đảm bảo ảnh trong gallery cũng được bo góc */
+.trix-content .attachment-gallery img {
+  border-radius: 1rem;
+}

@@ -108,7 +108,7 @@ class Admin::ProductsController < ApplicationController
       :category_id,
       :main_features,
       :details,
-      variants_attributes: [:id, :sku, :price, :stock, :color, :_destroy, { images: [] }],
+      variants_attributes: [:id, :sku, :price, :sale, :stock, :color, :_destroy, { images: [] }],
       specifications_attributes: [:id, :name, :content, :position, :_destroy]
     )
 

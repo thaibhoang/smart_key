@@ -1,5 +1,5 @@
 <%= form_with model: [:admin, @product],
-              html: { multipart: true },
+              html: { multipart: true, novalidate: true },
               data: { controller: "product-form" },
               class: "space-y-8" do |f| %>
   <% if @product.errors.any? %>
@@ -27,6 +27,14 @@
                          class:
                            "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
                          placeholder: "Nhập tên sản phẩm..." %>
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="mb-2 block text-sm font-medium text-slate-800 dark:text-slate-100">Mô tả sản phẩm</label>
+        <%= f.text_area :description,
+                         class:
+                           "w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary",
+                         placeholder: "Nhập mô tả sản phẩm..." %>
       </div>
 
       <div>
@@ -135,6 +143,11 @@
                   Giá:
                   <%= number_to_currency(vf.object.price, unit: "", precision: 0, delimiter: ".") %> VNĐ
                 </span>
+                <% if vf.object.sale.present? && vf.object.sale.positive? %>
+                  <span class="text-red-500 font-medium">
+                    (Giảm giá: <%= number_to_currency(vf.object.sale, unit: "", precision: 0, delimiter: ".") %>)
+                  </span>
+                <% end %>
               <% end %>
               <% if vf.object.stock.present? %>
                 <span>Tồn: <%= vf.object.stock %></span>
@@ -209,6 +222,14 @@
                                     "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
                                   step: 1000,
                                   min: 0 %>
+            </div>
+            <div>
+              <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Giá khuyến mãi (VNĐ)</label>
+              <%= vf.number_field :sale,
+                                  class: "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                  step: 1000,
+                                  min: 0,
+                                  placeholder: "Để trống nếu không giảm giá" %>
             </div>
             <div>
               <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Tồn kho</label>
@@ -353,6 +374,14 @@
               <div>
                 <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Giá bán (VNĐ)</label>
                 <%= vf.number_field :price,
+                                    class:
+                                      "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
+                                    step: 1000,
+                                    min: 0 %>
+              </div>
+              <div>
+                <label class="mb-1 block text-xs font-medium text-slate-700 dark:text-slate-200">Giá khuyến mãi (VNĐ)</label>
+                <%= vf.number_field :sale,
                                     class:
                                       "w-full rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary",
                                     step: 1000,

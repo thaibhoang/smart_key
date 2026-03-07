@@ -1,23 +1,34 @@
 class ProductsController < ApplicationController
   def index
-    # Load Product kèm theo Variants và Ảnh của từng Variant để tránh N+1 query
-    @products = Product.includes(variants: { images_attachments: :blob }).all
+    # 1. Khởi tạo query với includes để tránh N+1
+    @products = Product.includes(variants: { images_attachments: :blob })
     @categories = Category.all
+  
+    # 2. Filter theo search và category
     @products = @products.where("LOWER(name) LIKE ?", "%#{params[:search].downcase}%") if params[:search].present?
-
-    # Logic filter theo category
     @products = @products.where(category_id: params[:category]) if params[:category].present?
-
-    # Logic sort
+  
+    # 3. Logic tính toán giá thực tế (Effective Price)
+    # Nếu sale > 0 thì lấy sale, ngược lại lấy price
+    effective_price_sql = "MIN(CASE WHEN variants.sale > 0 AND variants.sale IS NOT NULL 
+                               THEN variants.sale 
+                               ELSE variants.price 
+                          END)"
+  
+    # 4. Logic sort
     case params[:sort]
     when 'price_asc'
-      @products = @products.joins(:variants).group('products.id').order('MIN(variants.price) ASC')
+      @products = @products.joins(:variants)
+                           .group('products.id')
+                           .order(Arel.sql("#{effective_price_sql} ASC"))
     when 'price_desc'
-      @products = @products.joins(:variants).group('products.id').order('MIN(variants.price) DESC')
+      @products = @products.joins(:variants)
+                           .group('products.id')
+                           .order(Arel.sql("#{effective_price_sql} DESC"))
     else
       @products = @products.order(created_at: :desc)
     end
-
+  
     @pagy, @products = pagy(@products, limit: 8)
   end
 

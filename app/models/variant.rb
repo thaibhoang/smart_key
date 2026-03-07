@@ -10,4 +10,10 @@ class Variant < ApplicationRecord
   validates :sku, presence: true
   validates :price, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
   validates :stock, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
+
+
+  # app/models/variant.rb
+  def effective_price
+    (sale.to_f > 0 && sale < price) ? sale : price
+  end
 end

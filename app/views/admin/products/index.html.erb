@@ -127,8 +127,11 @@
                       <%= product.brand.presence || "-" %>
                     </td>
                     <td class="py-4 px-6 text-sm font-medium text-slate-900 dark:text-white text-right">
-                      <% if representative_variant&.price.present? %>
-                        <% formatted_price = number_to_currency(representative_variant.price, unit: "", precision: 0, delimiter: ".") %>
+                      <% representative_price = representative_variant&.price %>
+                      <% representative_price = representative_variant&.sale if (representative_variant&.sale.present? && representative_variant&.sale > 0) %>
+                    
+                      <% if representative_price.present? %>
+                        <% formatted_price = number_to_currency(representative_price, unit: "", precision: 0, delimiter: ".") %>
                         <%= formatted_price %> <span class="text-xs text-slate-500 dark:text-slate-400">VNĐ</span>
                       <% else %>
                         -
