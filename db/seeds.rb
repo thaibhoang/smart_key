@@ -36,12 +36,13 @@ puts "Đang tạo 10 sản phẩm..."
     )
 
     # Đính kèm 8 ảnh cho mỗi variant
-    if File.exist?(image_path_2)
+    if File.exist?(image_path_1) # Kiểm tra file tồn tại
       8.times do |img_i|
         variant.images.attach(
           io: File.open(images_array.sample),
           filename: "v_#{v_index}_img_#{img_i}.jpg",
-          content_type: "image/jpeg"
+          content_type: "image/jpeg",
+          metadata: { slot: img_i.to_s } # <--- Thêm dòng này để gán slot từ 0-7
         )
       end
     end

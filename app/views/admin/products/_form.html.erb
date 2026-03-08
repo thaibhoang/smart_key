@@ -258,9 +258,17 @@
                 class="grid grid-cols-3 sm:grid-cols-5 gap-3"
                 data-variant-images-target="grid"
               >
-              <% existing_images = vf.object.respond_to?(:images) ? vf.object.images.attachments.order(:created_at) : [] %>
+              <% 
+                attachments_map = {}
+                if vf.object.respond_to?(:images)
+                  vf.object.images.attachments.each do |ann|
+                    slot_idx = ann.metadata[:slot].to_i
+                    attachments_map[slot_idx] = ann
+                  end
+                end              
+              %>
               <% (0...10).each do |slot_index| %>
-                <% image_attachment = existing_images && existing_images[slot_index] %>
+                <% image_attachment = attachments_map[slot_index] %>
                 <div
                   class="relative aspect-square rounded-lg border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 flex items-center justify-center overflow-hidden cursor-pointer group"
                   data-variant-images-target="slot"
@@ -281,7 +289,7 @@
                   <% end %>
                   <input
                     type="file"
-                    name="product[variants_attributes][<%= vf.index %>][images][]"
+                    name="product[variants_attributes][<%= vf.index %>][images][<%= slot_index %>]"
                     accept="image/*"
                     class="hidden"
                     data-variant-images-target="fileInput"
@@ -425,7 +433,7 @@
                     </div>
                     <input
                       type="file"
-                      name="product[variants_attributes][NEW_RECORD][images][]"
+                      name="product[variants_attributes][NEW_RECORD][images][<%= slot_index %>]"
                       accept="image/*"
                       class="hidden"
                       data-variant-images-target="fileInput"

@@ -1,7 +1,7 @@
 <%= render 'shared/header' %>
 
 <%# Khai báo dữ liệu hình ảnh %>
-<% images = @selected_variant&.images || [] %>
+<% images = @selected_variant&.sorted_images || [] %>
 <% image_urls = images.map { |img| url_for(img.variant(:standard)) } %>
 <% thumb_urls = images.map { |img| url_for(img.variant(:thumb)) } %>
 

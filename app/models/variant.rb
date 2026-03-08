@@ -16,4 +16,19 @@ class Variant < ApplicationRecord
   def effective_price
     (sale.to_f > 0 && sale < price) ? sale : price
   end
+
+  # Trong file app/models/variant.rb (hoặc xử lý trực tiếp ở View)
+  def main_image
+    return nil unless images.attached?
+    
+    # Sắp xếp các attachment theo slot tăng dần và lấy cái đầu tiên
+    images.attachments.min_by { |a| a.metadata[:slot].to_i }
+  end
+
+  def sorted_images
+    return [] unless images.attached?
+    
+    # Lấy danh sách ảnh đã sắp xếp theo thứ tự slot để hiện gallery
+    images.attachments.sort_by { |a| a.metadata[:slot].to_i }
+  end
 end

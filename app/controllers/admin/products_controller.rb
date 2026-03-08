@@ -36,8 +36,10 @@ class Admin::ProductsController < ApplicationController
     build_associations_if_empty
 
     if @product.save
+      attach_additional_variant_images
       redirect_to edit_admin_product_path(@product), notice: "Đã tạo sản phẩm thành công."
     else
+      build_associations_if_empty
       render :new, status: :unprocessable_entity
     end
   end
@@ -87,16 +89,29 @@ class Admin::ProductsController < ApplicationController
     return unless variants_param
 
     variants_param.each_value do |attrs|
-      variant_id = attrs[:id]
-      images = attrs[:images]
-      next if variant_id.blank? || images.blank?
+      images_hash = attrs[:images]
+      next if images_hash.blank?
 
-      variant = @product.variants.find_by(id: variant_id)
+      variant = if attrs[:id].present?
+        @product.variants.find_by(id: attrs[:id])
+      else
+        @product.variants.find_by(sku: attrs[:sku])
+      end
+      
       next unless variant
 
-      Array(images).each do |upload|
+      images_hash.each do |slot_index, upload|
         next if upload.blank?
-        variant.images.attach(upload)
+
+        existing_at_slot = variant.images.attachments.select { |a| a.metadata[:slot] == slot_index.to_s }.first
+        existing_at_slot.purge if existing_at_slot
+
+        variant.images.attach(
+          io: upload.tempfile,
+          filename: upload.original_filename,
+          content_type: upload.content_type,
+          metadata: { slot: slot_index } # Lưu vị trí vào metadata
+        )
       end
     end
   end
@@ -108,7 +123,7 @@ class Admin::ProductsController < ApplicationController
       :category_id,
       :main_features,
       :details,
-      variants_attributes: [:id, :sku, :price, :sale, :stock, :color, :_destroy, { images: [] }],
+      variants_attributes: [:id, :sku, :price, :sale, :stock, :color, :_destroy, { images: {} }],
       specifications_attributes: [:id, :name, :content, :position, :_destroy]
     )
 
@@ -116,10 +131,10 @@ class Admin::ProductsController < ApplicationController
     # mà sẽ xử lý append thủ công trong attach_additional_variant_images.
     if permitted[:variants_attributes]
       permitted[:variants_attributes].each do |_, v_attrs|
-        v_attrs.delete(:images) if v_attrs[:id].present?
+        v_attrs.delete(:images) 
       end
     end
-
+  
     permitted
   end
 end

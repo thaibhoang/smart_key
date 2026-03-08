@@ -81,7 +81,7 @@
         <% 
           # Logic lấy variant đầu tiên và ảnh chính
           first_variant = product.cheapest_variant
-          main_image = first_variant&.images&.first
+          main_image = first_variant&.main_image&.variant(:standard)
           price = first_variant&.price || 0
           sale_price = first_variant&.sale
           has_sale = sale_price.to_f > 0 && sale_price < price
