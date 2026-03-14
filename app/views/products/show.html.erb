@@ -6,7 +6,7 @@
 <% thumb_urls = images.map { |img| url_for(img.variant(:thumb)) } %>
 
 <%# Tăng max-w lên để hiển thị đẹp trên PC rộng %>
-<main class="max-w-7xl mx-auto pt-10" data-controller="product-gallery">
+<main class="max-w-6xl mx-auto pt-10" data-controller="product-gallery">
   
   <%# WRAPPER CHO PHẦN TRÊN: CHIA 2 CỘT TRÊN PC %>
   <div class="lg:grid lg:grid-cols-2 lg:gap-12 lg:items-start px-4">
@@ -72,7 +72,7 @@
       <span class="text-secondary dark:text-gray-400 text-xs font-bold tracking-wider uppercase">
         <%= @product.brand.presence || @product.category&.name %>
       </span>
-      <h2 class="text-3xl lg:text-4xl font-bold mt-1 text-gray-900 dark:text-white"><%= @product.name %></h2>
+      <h2 class="text-2xl lg:text-3xl font-bold mt-1 text-gray-900 dark:text-white"><%= @product.name %></h2>
 
       <%
         price = @selected_variant&.price || 0
@@ -82,7 +82,7 @@
       <div class="flex items-center justify-between mt-4">
         <div class="flex items-baseline space-x-3">
           <% if has_sale %>
-            <span class="text-3xl font-bold text-gray-900 dark:text-white">
+            <span class="text-2xl font-bold text-gray-900 dark:text-white">
               <%= number_to_currency(sale_price, unit: "₫", precision: 0, format: "%n %u") %>
             </span>
             <span class="text-lg text-gray-400 line-through decoration-1">
@@ -116,7 +116,7 @@
 
       <%# RICH TEXT: MAIN FEATURES %>
       <% if @product.main_features.present? %>
-        <div class="mt-12">
+        <div class="mt-8 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Tính năng nổi bật</h3>
           <div class="prose prose-base dark:prose-invert max-w-none">
             <%= @product.main_features %>
@@ -140,8 +140,8 @@
 
     <%# SECTION 4: DETAILS & SPECS %>
     <% if @product.details.present? %>
-      <hr class="my-12 border-gray-200 dark:border-gray-700"/>
-      <section>
+      <hr class="my-6 sm:my-12 border-gray-200 dark:border-gray-700"/>
+      <section class="mt-12 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Mô tả chi tiết</h3>
         <div class="prose prose-base dark:prose-invert max-w-none trix-content">
           <%= @product.details %>
@@ -151,12 +151,11 @@
 
     <% if @specifications.any? %>
       <section class="mb-12 mt-12">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Thông số kỹ thuật</h3>
         <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden text-sm lg:text-base">
           <% @specifications.each_with_index do |spec, index| %>
             <div class="grid grid-cols-3 border-b border-gray-200 dark:border-gray-700 p-5 <%= 'bg-gray-50 dark:bg-gray-800/50' if index.odd? %> last:border-0">
               <div class="text-gray-500 dark:text-gray-400 font-medium"><%= spec.name %></div>
-              <div class="col-span-2 font-medium text-gray-900 dark:text-white text-right sm:text-left"><%= spec.content %></div>
+              <div class="pl-2 col-span-2 font-medium text-gray-900 dark:text-white text-left"><%= spec.content %></div>
             </div>
           <% end %>
         </div>

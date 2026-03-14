@@ -4,7 +4,14 @@ class Variant < ApplicationRecord
   has_many_attached :images do |attachable|
     attachable.variant :thumb, resize_to_fill: [96, 96]
 
-    attachable.variant :standard, resize_to_limit: [800, 800]
+    attachable.variant :standard, 
+      resize_to_limit: [1500, 1500], 
+      format: :webp, 
+      saver: { 
+        quality: 88,          # Độ nén tối ưu (85 là mức "vàng" cho WebP)
+        subsample_mode: "on", # Giữ chi tiết sắc cạnh, cực kỳ quan trọng cho đồ kim khí
+        strip: true           # Loại bỏ metadata để file nhẹ nhất có thể
+      }
   end
 
   validates :sku, presence: true

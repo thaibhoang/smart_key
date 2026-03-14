@@ -1,19 +1,6 @@
 <%# app/views/shared/_pagy_nav.html.erb %>
-<nav class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-0 mt-6" aria-label="Pagination">
-  
-  <div class="flex flex-1 justify-between sm:hidden">
-    <%= link_to_if pagy.prev, "Previous", pagy_url_for(pagy, pagy.prev), 
-        class: "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" do %>
-      <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Previous</span>
-    <% end %>
-
-    <%= link_to_if pagy.next, "Next", pagy_url_for(pagy, pagy.next), 
-        class: "relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" do %>
-      <span class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">Next</span>
-    <% end %>
-  </div>
-
-  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-center">
+<nav class="flex items-center justify-between border-t border-gray-200 px-4 pt-3 sm:px-0 mt-6" aria-label="Pagination">
+  <div class="flex flex-1 items-center justify-center">
     <div>
       <nav class="isolate inline-flex gap-2 -space-x-px" aria-label="Pagination">
         <% pagy.series.each do |item| %>
