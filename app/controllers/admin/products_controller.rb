@@ -42,6 +42,11 @@ class Admin::ProductsController < ApplicationController
       build_associations_if_empty
       render :new, status: :unprocessable_entity
     end
+  rescue StandardError => e
+    Rails.logger.error "Product Create Error: #{e.message}"
+    flash.now[:alert] = "Lỗi hệ thống: #{e.message}"
+    build_associations_if_empty
+    render :new, status: :unprocessable_entity
   end
 
   def edit
