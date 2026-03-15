@@ -40,3 +40,36 @@
 .trix-content .attachment-gallery img {
   border-radius: 1rem;
 }
+
+/* 1. Văn bản bình thường: 14px, đậm hơn một chút (Slate-600) */
+trix-editor, .trix-content {
+  font-size: 14px !important;
+  color: #475569 !important; /* Tương đương slate-600 - Rõ ràng hơn slate-500 */
+  line-height: 1.6;
+  font-weight: 450; /* Hơi đậm hơn mức normal (400) một xíu để sắc nét */
+}
+
+/* 2. Các thẻ Heading: Rất đậm và chuyên nghiệp (Slate-800) */
+.trix-content h1, 
+.trix-content h2, 
+.trix-content h3 {
+  color: #1e293b !important; /* Tương đương slate-800 - Rất đậm đà */
+  font-weight: 800 !important; /* Extra Bold để phân cấp rõ rệt */
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+/* 3. Style cho danh sách (Bullet points) cũng đậm hơn */
+.trix-content ul, .trix-content ol {
+  color: #475569 !important;
+  margin-left: 1.5rem;
+}
+
+/* 4. Chế độ Dark Mode */
+.dark .trix-content {
+  color: #cbd5e1 !important; /* slate-300 */
+}
+.dark .trix-content h1, .dark .trix-content h2 {
+  color: #f8fafc !important; /* slate-50 */
+}
