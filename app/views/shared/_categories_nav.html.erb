@@ -4,7 +4,7 @@
     <% categories.each do |category| %>
       <div class="relative group" data-categories-dropdown-target="item">
         <%= link_to category.name, products_path(category: category.id),
-            class: "block py-4 px-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors #{@selected_category == category ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600' : ''}" %>
+            class: "block py-4 px-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:text-secondary dark:hover:text-secondary/80 transition-colors #{@selected_category == category ? 'text-secondary dark:text-secondary/80 border-b-2 border-secondary' : ''}" %>
         
         <% if category.children.any? %>
           <div class="absolute top-full left-0 w-screen max-w-4xl bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
@@ -14,14 +14,14 @@
                 <div>
                   <h3 class="font-bold text-gray-900 dark:text-white mb-3">
                     <%= link_to level2_category.name, products_path(category: level2_category.id),
-                        class: "hover:text-blue-600 dark:hover:text-blue-400 transition-colors" %>
+                        class: "hover:text-secondary dark:hover:text-secondary/80 transition-colors" %>
                   </h3>
                   <% if level2_category.children.any? %>
                     <ul class="space-y-2">
                       <% level2_category.children.each do |level3_category| %>
                         <li>
                           <%= link_to level3_category.name, products_path(category: level3_category.id),
-                              class: "text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" %>
+                              class: "text-sm text-gray-600 dark:text-gray-400 hover:text-secondary dark:hover:text-secondary/80 transition-colors" %>
                         </li>
                       <% end %>
                     </ul>
