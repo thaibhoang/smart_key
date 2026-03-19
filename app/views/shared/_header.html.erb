@@ -1,35 +1,39 @@
 <%# Header Section - Chỉ giữ lại Brand Logo %>
-<header class=" flex gap-2 items-center sticky top-0 z-50 bg-white/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-  <div class="max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-start items-center h-16">
+<header class="flex gap-2 items-center sticky top-0 z-50 bg-white dark:bg-background-dark border-b border-gray-100 dark:border-gray-800">
+  <div class="max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
+    <div class="flex gap-4 items-center h-16">
+      <!-- Mobile Categories Menu -->
+      <%= render 'shared/mobile_categories' %>
+      
       <div class="flex-shrink-0 flex items-center">
         <%= link_to root_path, class: "flex items-center justify-center gap-1 text-2xl tracking-widest text-primary dark:text-white uppercase" do %>
           <%= image_tag "logo.png", 
                         alt: "Prama Logo", 
                         class: "h-12 w-auto object-contain" %>
-          <dic class="text-[#E6CF55]">PRAMA</div>
+          <div class="text-[#E6CF55]">PRAMA</div>
         <% end %>
       </div>
-    </div>
 
-    <% if local_assigns[:products] %>
-      <div class="text-sm sm:text-base flex-shrink-0 flex items-center px-4 text-primary/80 hover:text-primary">
-        <a href="#products">
-          Sản phẩm
-        </a>
+      <!-- Desktop Navigation -->
+      <div class="hidden lg:flex items-center space-x-6">
+        <% if local_assigns[:products] %>
+          <div class="text-sm sm:text-base flex-shrink-0 flex items-center text-primary/80 hover:text-primary">
+            <a href="#products">
+              Sản phẩm
+            </a>
+          </div>
+        <% else %>
+          <div class="text-sm sm:text-base flex-shrink-0 flex items-center text-primary/80 hover:text-primary">
+            <%= link_to "Sản phẩm", root_path(anchor: 'products') %>
+          </div>
+        <% end %>
+
+        <div class="text-sm sm:text-base flex-shrink-0 flex items-center text-primary/80 hover:text-primary">
+          <a href="#contact">
+            Liên hệ
+          </a>
+        </div>
       </div>
-    <% end %>
-
-    <% if !local_assigns[:products] %>
-      <div class="text-sm sm:text-base flex-shrink-0 flex items-center px-4 text-primary/80 hover:text-primary">
-        <%= link_to "Sản phẩm", root_path(anchor: 'products') %>
-      </div>
-    <% end %>
-
-    <div class="text-sm sm:text-base flex-shrink-0 flex items-center px-4 text-primary/80 hover:text-primary">
-      <a href="#contact">
-        Liên hệ
-      </a>
     </div>
   </div>
 </header>

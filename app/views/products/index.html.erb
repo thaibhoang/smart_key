@@ -38,17 +38,12 @@
     %>
   <% end %>
 
-  <%# Category Tabs %>
-  <div class="flex space-x-3 overflow-x-auto hide-scrollbar pb-2">
-    <%= link_to "Tất cả", products_path, 
-        class: "flex-shrink-0 px-6 py-2 rounded-full #{params[:category].blank? ? 'bg-gray-800 text-white shadow-md' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'} text-sm font-medium transition-colors" %>
-    
-    <% @categories.each do |category| %>
-      <%= link_to category.name, products_path(category: category.id), 
-          class: "flex-shrink-0 px-6 py-2 rounded-full #{params[:category].to_i == category.id ? 'bg-gray-800 text-white shadow-md' : 'bg-white dark:bg-surface-dark border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300'} text-sm font-medium transition-colors" %>
-    <% end %>
-  </div>
+<%# Categories Navigation %>
+<%= render 'shared/categories_nav' %>
 </section>
+
+<%# Breadcrumb %>
+<%= render 'shared/breadcrumb' %>
 
 <%# turbo frame for products %>
 <%= turbo_frame_tag "products" do %>

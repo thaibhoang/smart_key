@@ -22,27 +22,26 @@
       </nav>
     </div>
   </aside>
-
-  <!-- Main Content -->
   <main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
-    <div class="mx-auto max-w-6xl flex flex-col gap-6">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-1">
-            <%= link_to "Sản phẩm", admin_products_path, class: "hover:underline" %>
-            <span class="material-symbols-outlined text-xs">chevron_right</span>
-            <span class="font-medium text-slate-900 dark:text-slate-50">Chỉnh sửa</span>
-          </div>
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">Chỉnh sửa sản phẩm</h2>
-          <p class="mt-1 text-slate-500 dark:text-slate-400">
-            Cập nhật thông tin chi tiết cho sản phẩm và các phiên bản.
-          </p>
-        </div>
+
+    <div class="admin-categories" data-controller="admin-categories">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Quản lý Danh mục</h1>
+        <button data-action="click->admin-categories#openCreateModal"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Thêm danh mục mới
+        </button>
       </div>
 
-      <%= render "form", product: @product %>
+      <!-- Categories Tree -->
+      <div class="bg-white dark:bg-surface-dark rounded-lg shadow">
+        <% @categories.each do |category| %>
+          <%= render 'category_tree', category: category, level: 0 %>
+        <% end %>
+      </div>
+
+      <!-- Create/Edit Modal -->
+      <%= render 'category_modal' %>
     </div>
   </main>
 </div>
-

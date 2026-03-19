@@ -2,11 +2,18 @@ class ProductsController < ApplicationController
   def index
     # 1. Khởi tạo query với includes để tránh N+1
     @products = Product.includes(variants: { images_attachments: :blob })
-    @categories = Category.all
+    @categories = Category.roots.includes(:children)
   
     # 2. Filter theo search và category
     @products = @products.where("LOWER(name) LIKE ?", "%#{params[:search].downcase}%") if params[:search].present?
-    @products = @products.where(category_id: params[:category]) if params[:category].present?
+    
+    # Filter theo category (bao gồm cả subcategories)
+    if params[:category].present?
+      category = Category.find(params[:category])
+      @products = @products.joins(:category).where(categories: { id: [category.id] + category.descendant_ids })
+      @selected_category = category
+      @breadcrumb = @selected_category.ancestors.reverse + [@selected_category]
+    end
   
     # 3. Logic tính toán giá thực tế (Effective Price)
     # Nếu sale > 0 thì lấy sale, ngược lại lấy price
@@ -34,6 +41,7 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.includes(variants: { images_attachments: :blob }, specifications: {}).find(params[:id])
+    @categories = Category.roots.includes(:children)
 
     # Lấy variant đầu tiên làm mặc định hoặc theo params
     @selected_variant =
@@ -48,5 +56,9 @@ class ProductsController < ApplicationController
     @related_products = Product.where(category_id: @product.category_id)
                                .where.not(id: @product.id)
                                .limit(4)
+    
+    # Breadcrumb cho trang chi tiết sản phẩm
+    @selected_category = @product.category
+    @breadcrumb = @selected_category.ancestors.reverse + [@selected_category]
   end
 end

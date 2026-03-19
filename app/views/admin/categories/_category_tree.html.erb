@@ -1,0 +1,54 @@
+<div class="category-item border-b border-gray-200 dark:border-gray-700 last:border-b-0" 
+     style="padding-left: <%= level * 20 %>px">
+  <div class="flex items-center justify-between p-4">
+    <div class="flex items-center space-x-3">
+      <% if category.children.any? %>
+        <button class="text-gray-400 hover:text-gray-600 toggle-icon" data-action="click->admin-categories#toggleExpand">
+          <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+      <% else %>
+        <div class="w-4"></div>
+      <% end %>
+      
+      <div>
+        <h3 class="font-medium text-gray-900 dark:text-white"><%= category.name %></h3>
+        <p class="text-sm text-gray-500">Level <%= category.level %> • <%= category.products.count %> sản phẩm</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-2">
+      <button data-action="click->admin-categories#openEditModal"
+              data-category-id="<%= category.id %>"
+              data-category-name="<%= category.name %>"
+              data-category-parent-id="<%= category.parent_id %>"
+              class="text-blue-600 hover:text-blue-800 text-sm">
+        Sửa
+      </button>
+      
+      <button data-action="click->admin-categories#openCreateModal"
+              data-parent-id="<%= category.id %>"
+              class="text-green-600 hover:text-green-800 text-sm">
+        Thêm con
+      </button>
+      
+      <% if category.products.empty? && category.children.empty? %>
+        <button data-action="click->admin-categories#deleteCategory"
+                data-category-id="<%= category.id %>"
+                class="text-red-600 hover:text-red-800 text-sm">
+          Xóa
+        </button>
+      <% end %>
+    </div>
+  </div>
+  
+  <!-- Children (initially hidden) -->
+  <% if category.children.any? %>
+    <div class="children-container hidden">
+      <% category.children.each do |child| %>
+        <%= render 'category_tree', category: child, level: level + 1 %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

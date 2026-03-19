@@ -1,0 +1,69 @@
+<!-- Modal Overlay -->
+<div data-admin-categories-target="modalOverlay" 
+     class="fixed inset-0 bg-black bg-opacity-50 z-50 opacity-0 invisible transition-all duration-300">
+  
+  <!-- Modal Content -->
+  <div class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white dark:bg-surface-dark rounded-lg shadow-xl max-w-md w-full">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <h3 data-admin-categories-target="modalTitle" class="text-lg font-semibold text-gray-900 dark:text-white">
+          Thêm danh mục mới
+        </h3>
+        <button data-action="click->admin-categories#closeModal" 
+                class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="p-6">
+        <form data-admin-categories-target="form" data-action="submit->admin-categories#submitForm">
+          <input type="hidden" data-admin-categories-target="categoryId" name="id">
+          <input type="hidden" data-admin-categories-target="parentId" name="parent_id">
+          
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Tên danh mục
+            </label>
+            <input type="text" 
+                   data-admin-categories-target="nameInput"
+                   name="name"
+                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                   placeholder="Nhập tên danh mục"
+                   required>
+          </div>
+          
+          <div class="mb-4" data-admin-categories-target="parentSelect">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Danh mục cha
+            </label>
+            <select data-admin-categories-target="parentSelectField"
+                    name="parent_id"
+                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white">
+              <option value="">-- Danh mục gốc --</option>
+              <% Category.roots.each do |category| %>
+                <%= render 'parent_option', category: category, level: 0 %>
+              <% end %>
+            </select>
+          </div>
+          
+          <div class="flex justify-end space-x-3">
+            <button type="button" 
+                    data-action="click->admin-categories#closeModal"
+                    class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              Hủy
+            </button>
+            <button type="submit" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <span data-admin-categories-target="submitText">Thêm</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

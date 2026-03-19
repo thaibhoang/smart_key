@@ -1,0 +1,6 @@
+<option value="<%= category.id %>">
+  <%= '  ' * level %><%= category.name %>
+</option>
+<% category.children.each do |child| %>
+  <%= render 'parent_option', category: child, level: level + 1 %>
+<% end %>

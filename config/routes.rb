@@ -1,10 +1,18 @@
 Rails.application.routes.draw do
   resources :products, only: [:index, :show]
 
+  namespace :api do
+    resources :categories, only: [:show] do
+      member do
+        get :children
+      end
+    end
+  end
+
   namespace :admin do
     root to: "products#index"
     resources :products, except: :show
-    resources :categories, only: :create
+    resources :categories, except: [:show]
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

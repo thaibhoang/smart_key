@@ -3,12 +3,86 @@ puts "Đang dọn dẹp dữ liệu cũ..."
 Product.destroy_all
 Category.destroy_all
 
-# Bước 2: Tạo Categories
-categories = [
-  Category.find_or_create_by!(name: "Khóa vân tay"),
-  Category.find_or_create_by!(name: "Khóa thẻ từ"),
-  Category.find_or_create_by!(name: "Khóa mã số")
-]
+# Bước 2: Tạo nested categories structure
+puts "Đang tạo cấu trúc danh mục nhiều cấp..."
+
+# Level 1 categories
+giay = Category.create!(name: "GIÀY")
+nam = Category.create!(name: "NAM")  
+nu = Category.create!(name: "NỮ")
+tre_em = Category.create!(name: "TRẺ EM")
+the_thao = Category.create!(name: "THỂ THAO")
+cac_nhan_hieu = Category.create!(name: "CÁC NHÃN HIỆU")
+outlet = Category.create!(name: "OUTLET")
+
+# Level 2 categories under GIÀY
+originals = Category.create!(name: "Originals", parent: giay)
+chay_bo = Category.create!(name: "Chạy bộ", parent: giay)
+tap_luyen = Category.create!(name: "Tập luyện", parent: giay)
+dep_dep_xo_ngan = Category.create!(name: "Dép & Dép xỏ ngón", parent: giay)
+quan_vot = Category.create!(name: "Quần vợt", parent: giay)
+sportswear = Category.create!(name: "Sportswear", parent: giay)
+sneakers = Category.create!(name: "Sneakers", parent: giay)
+golf = Category.create!(name: "Golf", parent: giay)
+giay_sneaker_den = Category.create!(name: "Giày sneaker đen", parent: giay)
+giay_must_have = Category.create!(name: "GIÀY \"MUST-HAVE\"", parent: giay)
+bong_da = Category.create!(name: "Bóng đá", parent: giay)
+ngoai_troi = Category.create!(name: "Ngoài Trời", parent: giay)
+bong_ro = Category.create!(name: "Bóng rổ", parent: giay)
+walking_shoes = Category.create!(name: "Walking Shoes", parent: giay)
+
+# Level 2 categories under NAM
+quan_ao_nam = Category.create!(name: "QUẦN ÁO", parent: nam)
+phu_kien_nam = Category.create!(name: "PHỤ KIỆN", parent: nam)
+the_thao_nam = Category.create!(name: "THỂ THAO", parent: nam)
+sale_nam = Category.create!(name: "SALE", parent: nam)
+
+# Level 3 categories under Originals
+Category.create!(name: "Stan Smith", parent: originals)
+Category.create!(name: "Superstar", parent: originals)
+Category.create!(name: "Gazelle", parent: originals)
+
+# Level 3 categories under QUẦN ÁO (NAM)
+Category.create!(name: "Áo thun & croptop", parent: quan_ao_nam)
+Category.create!(name: "Áo Nỉ", parent: quan_ao_nam)
+Category.create!(name: "Áo ngực thể thao", parent: quan_ao_nam)
+Category.create!(name: "Áo Jersey", parent: quan_ao_nam)
+Category.create!(name: "Áo Hoodie", parent: quan_ao_nam)
+Category.create!(name: "Áo khoác", parent: quan_ao_nam)
+Category.create!(name: "Quần", parent: quan_ao_nam)
+Category.create!(name: "Leggings", parent: quan_ao_nam)
+Category.create!(name: "Quần short", parent: quan_ao_nam)
+Category.create!(name: "Đầm", parent: quan_ao_nam)
+Category.create!(name: "Chân váy", parent: quan_ao_nam)
+Category.create!(name: "Sportswear", parent: quan_ao_nam)
+Category.create!(name: "CƠ BẢN", parent: quan_ao_nam)
+Category.create!(name: "Tracksuits", parent: quan_ao_nam)
+
+# Level 3 categories under PHỤ KIỆN (NAM)
+Category.create!(name: "Tất Cả Túi", parent: phu_kien_nam)
+Category.create!(name: "Tất", parent: phu_kien_nam)
+Category.create!(name: "Mũ lưỡi Trai & Đội đầu", parent: phu_kien_nam)
+Category.create!(name: "Găng tay", parent: phu_kien_nam)
+
+# Level 3 categories under THỂ THAO (NAM)
+Category.create!(name: "Chạy", parent: the_thao_nam)
+Category.create!(name: "Tập luyện", parent: the_thao_nam)
+Category.create!(name: "Tập Yoga", parent: the_thao_nam)
+Category.create!(name: "Golf", parent: the_thao_nam)
+Category.create!(name: "Bóng rổ", parent: the_thao_nam)
+Category.create!(name: "Quần vợt", parent: the_thao_nam)
+Category.create!(name: "Pickleball", parent: the_thao_nam)
+Category.create!(name: "Padel", parent: the_thao_nam)
+Category.create!(name: "Cầu lông", parent: the_thao_nam)
+Category.create!(name: "Trên sân", parent: the_thao_nam)
+
+# Level 3 categories under SALE (NAM)
+Category.create!(name: "Giày", parent: sale_nam)
+Category.create!(name: "Quần Áo", parent: sale_nam)
+Category.create!(name: "Phụ Kiện", parent: sale_nam)
+Category.create!(name: "Last Sizes", parent: sale_nam)
+
+categories = Category.all
 
 # Bước 3: Tạo 10 Sản phẩm mẫu bằng vòng lặp
 puts "Đang tạo 10 sản phẩm..."

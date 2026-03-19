@@ -13,3 +13,125 @@
  *= require_tree .
  *= require_self
  */
+
+/* Categories Navigation */
+.categories-nav .group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}
+
+.categories-nav .group:hover .group-hover\:visible {
+  visibility: visible;
+}
+
+/* Mobile Categories Animation */
+.mobile-categories-enter {
+  transform: translateX(-100%);
+}
+
+.mobile-categories-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms ease-in-out;
+}
+
+.mobile-categories-exit {
+  transform: translateX(0);
+}
+
+.mobile-categories-exit-active {
+  transform: translateX(-100%);
+  transition: transform 300ms ease-in-out;
+}
+
+/* Mobile Categories Level Transitions */
+[data-mobile-categories-target="content"] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-mobile-categories-target="level"] {
+  position: relative;
+  width: 100%;
+}
+
+.mobile-level-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.mobile-level-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 300ms ease-out;
+}
+
+.mobile-level-exit-active {
+  transform: translateX(-100%);
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 300ms ease-out;
+}
+
+.mobile-level-back-enter {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.mobile-level-back-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 300ms ease-out;
+}
+
+.mobile-level-back-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 300ms ease-out;
+}
+
+/* Mobile Categories Menu Background Fix */
+[data-mobile-categories-target="menu"] {
+  background-color: white !important;
+  opacity: 1 !important;
+}
+
+[data-mobile-categories-target="content"] {
+  background-color: white !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(100vh - 80px);
+}
+
+[data-mobile-categories-target="level"] {
+  background-color: white !important;
+}
+
+/* Ensure mobile menu is always white */
+[data-controller="mobile-categories"] [data-mobile-categories-target="menu"] * {
+  background-color: inherit;
+}
+
+/* Smooth scrolling for mobile categories */
+[data-mobile-categories-target="content"]::-webkit-scrollbar {
+  width: 4px;
+}
+
+[data-mobile-categories-target="content"]::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+[data-mobile-categories-target="content"]::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+[data-mobile-categories-target="content"]::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Admin Categories Tree */
+.category-item.expanded .children-container {
+  display: block;
+}
+
+.category-item .toggle-icon.expanded {
+  transform: rotate(90deg);
+}

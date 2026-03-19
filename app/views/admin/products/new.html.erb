@@ -13,6 +13,13 @@
           <span class="text-sm font-medium">Sản phẩm</span>
         <% end %>
       </nav>
+      <nav class="flex flex-col gap-1">
+        <%= link_to admin_categories_path,
+                    class: "flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary dark:bg-primary/20 dark:text-gray-400" do %>
+          <span class="material-symbols-outlined fill-current">category</span>
+          <span class="text-sm font-medium">Danh mục</span>
+        <% end %>
+      </nav>
     </div>
   </aside>
 

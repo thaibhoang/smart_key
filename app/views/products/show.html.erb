@@ -1,5 +1,8 @@
 <%= render 'shared/header' %>
 
+<%# Breadcrumb %>
+<%= render 'shared/breadcrumb' %>
+
 <%# Khai báo dữ liệu hình ảnh %>
 <% images = @selected_variant&.sorted_images || [] %>
 <% image_urls = images.map { |img| url_for(img.variant(:standard)) } %>

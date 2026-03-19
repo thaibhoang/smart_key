@@ -1,0 +1,53 @@
+<div class="lg:hidden" data-controller="mobile-categories">
+  <!-- Hamburger Button -->
+  <button data-mobile-categories-target="trigger" 
+          data-action="click->mobile-categories#open"
+          class="p-2 text-gray-600 dark:text-gray-400">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    </svg>
+  </button>
+
+  <!-- Slide Menu -->
+  <div data-mobile-categories-target="menu" 
+       class="fixed top-0 left-0 h-screen w-full bg-white shadow-lg transform -translate-x-full transition-transform duration-300 z-50 flex flex-col"
+       style="background-color: white !important;">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+      <h2 class="text-lg font-semibold text-gray-900">Danh mục</h2>
+      <button data-action="click->mobile-categories#close" 
+              class="p-2 text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Categories List -->
+    <div data-mobile-categories-target="content" class="flex-1 overflow-y-auto bg-white" style="background-color: white !important; height: calc(100vh - 80px);">
+      <div data-mobile-categories-target="level" data-level="1" class="p-4 bg-white" style="background-color: white !important;">
+        <% categories = @categories || Category.roots.includes(:children) %>
+        <% categories.each do |category| %>
+          <div class="mb-2">
+            <div class="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+              <%= link_to category.name, products_path(category: category.id),
+                  data: { action: "click->mobile-categories#close" },
+                  class: "flex-1 text-gray-900 font-medium" %>
+              <% if category.children.any? %>
+                <button data-action="click->mobile-categories#navigateToLevel" 
+                        data-category-id="<%= category.id %>"
+                        data-category-name="<%= category.name %>"
+                        class="p-1 text-gray-400 hover:text-gray-600">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
